@@ -22,29 +22,6 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
   
   switch (action.type) {
 
-    case AuthActionTypes.Signup: {
-      return {
-        ...state,
-        pending: true
-      };
-    }
-    case AuthActionTypes.SignupComplete: {
-      return {
-        ...state,
-        pending: false,
-        loggedIn: false
-        // user: action.payload,
-      };
-    }
-
-    case AuthActionTypes.SignupError: {
-      return {
-        ...state,
-        pending: false,
-        loggedIn: false,
-      };
-    }
-
     case AuthActionTypes.Login: {
       return {
         ...state,
@@ -66,29 +43,6 @@ export function reducer(state = initialState, action: AuthActionsUnion): State {
         pending: false
       };
     }
-
-    case AuthActionTypes.LoginWithProvider: {
-      return {
-        ...state,
-        pending: true
-      };
-    }
-    case AuthActionTypes.LoginWithProviderComplete: {
-      return {
-        ...state,
-        loggedIn: true,
-        pending: false,
-        user: action.payload,
-      };
-    }
-
-    case AuthActionTypes.LoginWithProviderError: {
-      return {
-        ...state,
-        pending: false
-      };
-    }
-
 
     case AuthActionTypes.Logout: {
       return initialState;

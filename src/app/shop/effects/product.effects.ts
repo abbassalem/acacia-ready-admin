@@ -2,31 +2,154 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { ProductService } from '../../core/services/product.service';
+import { ProductService } from '../services/product.service';
 import * as fromCategoryActions from '../actions/category.actions';
 import { Category } from '../models/category.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ProductEffects {
 
-  getAllCategories$ = createEffect ( () => {
-     return this.actions$.pipe(
-        ofType<fromCategoryActions.Load>(fromCategoryActions.CategoryActionTypes.Load),
-        switchMap( () => {
-          return this.productService.getCategories().pipe(
-            map( (cats: Array<Category>) => {
-                return new fromCategoryActions.LoadComplete(cats);
-            }),
-            catchError(err => of(new fromCategoryActions.LoadError(err)))
-        )
-    })
-  )
-  });
-
   constructor(
     private actions$: Actions,
     private productService: ProductService,
-    private db: AngularFirestore
+    private snackBar: MatSnackBar ,
+    private router: Router,
   ) {}
+
+  getAllCategories$ = createEffect ( () => 
+    this.actions$.pipe(
+       ofType<fromCategoryActions.Load>(fromCategoryActions.CategoryActionTypes.Load),
+       switchMap( (action) => 
+           this.productService.getCategories().pipe(
+           map( (cats: Array<Category>) => 
+               new fromCategoryActions.LoadComplete(cats)
+           ),
+           catchError(err => of(new fromCategoryActions.LoadError(err)))
+       )
+      )
+    )
+ );
+
+ getAllCategoriesSuccess$ = createEffect ( () => {
+  return this.actions$.pipe(
+      ofType<fromCategoryActions.LoadComplete>(fromCategoryActions.CategoryActionTypes.LoadComplete),
+      map( action => 
+        this.snackBar.open(`[${action.payload.length}] categories loaded successfully.`, 'Close',{
+            duration: 2000,
+            panelClass: ["snack-notification"],
+            horizontalPosition: "center",
+            verticalPosition: "top"
+        })
+      )
+    )
+  }, {dispatch: false}
+)
+
+ getAllCategoriesError$ = createEffect ( () => {
+    return this.actions$.pipe(
+        ofType<fromCategoryActions.LoadError>(fromCategoryActions.CategoryActionTypes.LoadError),
+        map( action => 
+          this.snackBar.open(`Error in loading Categories [${action.payload}].`, 'Close',{
+              duration: 4000,
+              panelClass: ["snack-notification"],
+              horizontalPosition: "center",
+              verticalPosition: "top"
+          })
+        )
+      )
+    }, {dispatch: false}
+  )
+
+  createCategory$ = createEffect( () => 
+    this.actions$.pipe(
+      ofType<fromCategoryActions.CreateCategory>(fromCategoryActions.CategoryActionTypes.CreateCategory),
+      switchMap( (action) => 
+        this.productService.createCategory(action.payload).pipe(
+            map( (result) => new fromCategoryActions.CreateCategoryComplete(result)),
+            catchError( err => of(new fromCategoryActions.CreateCategoryError(err)))
+        )
+      )
+    )
+  )
+
+  createCategorySuccess$ = createEffect( () => 
+      this.actions$.pipe(
+        ofType<fromCategoryActions.CreateCategoryComplete>(fromCategoryActions.CategoryActionTypes.CreateCategoryComplete),
+        map( action => {
+            this.snackBar.open(`Category [${action.payload.name}] saved successfully.`, 'Close',{
+                duration: 4000,
+                panelClass: ["snack-notification"],
+                horizontalPosition: "center",
+                verticalPosition: "top"
+            });
+          return new fromCategoryActions.Load();
+        }),
+        catchError ( err => of(err))
+      )
+  )
+
+createCategoryError$ = createEffect( () => {
+      return this.actions$.pipe(
+         ofType<fromCategoryActions.CreateCategoryError>(fromCategoryActions.CategoryActionTypes.CreateCategoryError),
+         map( action => 
+             this.snackBar.open(`Error in creating Category [${action.payload}].`, 'Close',{
+                 duration: 4000,
+                 panelClass: ["snack-notification"],
+                 horizontalPosition: "center",
+                 verticalPosition: "top"
+             })
+         )
+       )
+  }, {dispatch: false})
+
+  createProduct$ = createEffect( () => 
+    this.actions$.pipe(
+      ofType<fromCategoryActions.CreateProduct>(fromCategoryActions.CategoryActionTypes.CreateProduct),
+      switchMap( action => 
+        this.productService.createProduct(action.payload.catId, action.payload.product).pipe(
+          map( prodResult  =>  {
+            console.log('create product - productservice');
+            console.dir(prodResult);
+            return new fromCategoryActions.CreateProductComplete(prodResult);
+          }),
+          catchError( err => of(new fromCategoryActions.CreateProductError(err)))
+      )
+    )
+    )
+  )
+
+  createProductSuccess$ = createEffect( () => 
+     this.actions$.pipe(
+        ofType<fromCategoryActions.CreateProductComplete>(fromCategoryActions.CategoryActionTypes.CreateProductComplete),
+        map( action => {  
+          this.snackBar.open(`Product [${action.payload.product.name} in CategoryId [${action.payload.catId}]]saved successfully.`, 'Close',{
+            duration: 4000,
+            panelClass: ["snack-notification"],
+            horizontalPosition: "center",
+            verticalPosition: "top"
+          });
+          // this.router.navigate(['categories/', action.payload.catId]);
+          return new fromCategoryActions.Load();
+        })
+    )
+  )
+   
+  createProductError$ = createEffect( () => {
+    return this.actions$.pipe(
+       ofType<fromCategoryActions.CreateProductError>(fromCategoryActions.CategoryActionTypes.CreateProductError),
+       map( action => 
+           this.snackBar.open(`Error in creating Product [${action.payload}].`, 'Close',{
+               duration: 4000,
+               panelClass: ["snack-notification"],
+               horizontalPosition: "center",
+               verticalPosition: "top"
+           })
+       )
+     )
+}, {dispatch: false})
+
 }
+
+

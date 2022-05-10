@@ -11,22 +11,10 @@ import { AuthGuard } from './services/auth-guard.service';
 import { AuthEffects } from './effects/auth.effects';
 import { reducer } from './reducers/auth.reducer';
 import { MaterialModule } from '../material';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import {SignInComponent} from './components/sign-in/sign-in.component';
-
-// export const COMPONENTS = [LoginPageComponent, SignInComponent];
 
 @NgModule({
   imports: [    
-    RouterModule.forChild([
-      { path: '', redirectTo: 'signin', pathMatch: 'full'},
-      { path: 'signup', component: SignUpComponent},
-      { path: 'verifyemail', component: VerifyEmailComponent},
-      { path: 'forgotpassword', component: ForgotPasswordComponent},
-      { path: 'signin', component: LoginPageComponent}
-    ]),
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
@@ -35,12 +23,8 @@ import {SignInComponent} from './components/sign-in/sign-in.component';
   ],
   declarations: [
     LoginPageComponent,
-    SignInComponent,
-    SignUpComponent,
-    ForgotPasswordComponent,
-    VerifyEmailComponent
+    SignInComponent
   ]
-  // exports: [COMPONENTS]
 })
 
 export class AuthModule {

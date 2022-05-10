@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Category } from '../models/category.model';
+import { Product } from '../models/product.model';
 
 export enum CategoryActionTypes {
   Search = '[Category] Search',
@@ -9,7 +10,43 @@ export enum CategoryActionTypes {
   LoadComplete = '[Category] Load Complete',
   LoadError = '[Category] Load Error',
   Select = '[Category] Select',
-  SelectProduct = '[Product] Select'
+  SelectProduct = '[Product] Select',
+  CreateCategory = '[Category] Create',
+  CreateCategoryComplete = '[Category] Create Complete',
+  CreateCategoryError = '[Category] Create Error',
+  CreateProduct = '[Product] Create',
+  CreateProductComplete = '[Product] Create Complete',
+  CreateProductError = '[Product] Create Error'
+}
+
+export class CreateCategory implements Action {
+  readonly type = CategoryActionTypes.CreateCategory;
+  constructor(public payload: Category) {}
+}
+
+export class CreateCategoryComplete implements Action {
+  readonly type = CategoryActionTypes.CreateCategoryComplete;
+  constructor(public payload: Category) {}
+}
+
+export class CreateCategoryError implements Action {
+  readonly type = CategoryActionTypes.CreateCategoryError;
+  constructor(public payload: any) {}
+}
+
+export class CreateProduct implements Action {
+  readonly type = CategoryActionTypes.CreateProduct;
+  constructor(public payload:{catId: number, product: Product}) {}
+}
+
+export class CreateProductComplete implements Action {
+  readonly type = CategoryActionTypes.CreateProductComplete;
+  constructor(public payload: {catId: number, product: Product}) {}
+}
+
+export class CreateProductError implements Action {
+  readonly type = CategoryActionTypes.CreateProductError;
+  constructor(public payload:any) {}
 }
 
 export class Search implements Action {
@@ -24,7 +61,7 @@ export class SearchComplete implements Action {
 
 export class SearchError implements Action {
   readonly type = CategoryActionTypes.SearchError;
-  constructor(public payload: string) {}
+  constructor(public payload: any) {}
 }
 
 export class Load implements Action {
@@ -39,7 +76,7 @@ export class LoadComplete implements Action {
 
 export class LoadError implements Action {
   readonly type = CategoryActionTypes.LoadError;
-  constructor(public payload: string) {}
+  constructor(public payload: any) {}
 }
 
 export class Select implements Action {
@@ -61,5 +98,11 @@ export type CategoryActionsUnion =
   | SelectProduct
   | SearchComplete
   | SearchError
-  | Search;
+  | Search
+  | CreateCategory
+  | CreateCategoryComplete
+  | CreateCategoryError
+  | CreateProduct
+  | CreateProductComplete
+  | CreateProductError;
 

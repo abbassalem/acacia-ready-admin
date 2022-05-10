@@ -8,7 +8,6 @@ import { AuthService } from '../services/auth.service';
 import { Reset } from '../../orders/actions/orders.actions';
 import { OrderState } from '../../orders/reducers/orders.reducer';
 import { Store } from '@ngrx/store';
-import { AuthProvider, FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 
 @Injectable()
 export class AuthEffects {
@@ -22,44 +21,6 @@ export class AuthEffects {
     private orderStore: Store<OrderState>,
   ) {}
 
-
-  pickAuthProvider(providerName: string): AuthProvider {
-      let provider:AuthProvider ;
-      switch(providerName) {
-        case 'google':{
-          provider = new GoogleAuthProvider();
-          break;
-        }
-        case 'facebook':{
-          provider = new FacebookAuthProvider();
-          break;
-        }
-      }
-      return provider;
-  }
-
-  signup$ = createEffect( () => {
-      return this.actions$.pipe(
-        ofType<fromAuthActions.Signup>(fromAuthActions.AuthActionTypes.Signup),
-          switchMap( action => this.authService.SignUp(action.payload.email, action.payload.password, action.payload.extraData)
-          .then(
-            () => {
-                return new fromAuthActions.SignupComplete();
-              }
-          )
-          .catch(
-              error => new fromAuthActions.SignupError(error)
-          )
-        )
-      )
-    }, { dispatch: false });
-
-  SignupSuccess$ = createEffect( () => {
-    return this.actions$.pipe(
-      ofType<fromAuthActions.SignupComplete>(fromAuthActions.AuthActionTypes.SignupComplete),
-      tap(() => {this.router.navigate(['/shop'])})
-    );
-  })
 
   login$ = createEffect( () => {
     return this.actions$.pipe(
@@ -81,33 +42,9 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(fromAuthActions.AuthActionTypes.LoginComplete),
       tap(() => {
-        this.location.back();
+        this.router.navigate(['home']);
       })
   )}, {dispatch: false}
-  );
-
-  loginWithProvider$ = createEffect( () => {
-    return this.actions$.pipe(
-      ofType<fromAuthActions.LoginWithProvider>(fromAuthActions.AuthActionTypes.LoginWithProvider),
-      switchMap( action => 
-            this.authService.authProvider(this.pickAuthProvider(action.payload))
-          .then(
-            user => {
-                return new fromAuthActions.LoginWithProviderComplete(user);
-              }
-          )
-          .catch(
-              error => new fromAuthActions.LoginError(error)
-          )
-        )
-    )}, {dispatch: true}
-  ); 
-
-  loginWithProviderSuccess$ = createEffect( () => {
-    return this.actions$.pipe(
-      ofType(fromAuthActions.AuthActionTypes.LoginWithProviderComplete),
-      tap(() => this.router.navigate(['/shop/basket']))
-    )}, {dispatch: false}
   );
 
   loginRedirect$ = createEffect( () => {
@@ -115,7 +52,7 @@ export class AuthEffects {
       ofType(fromAuthActions.AuthActionTypes.LoginRedirect, fromAuthActions.AuthActionTypes.Logout),
       tap(authed => {
         this.orderStore.dispatch(new Reset());
-        this.router.navigate(['/auth']);
+        this.router.navigate(['/login']);
       })
     )}, {dispatch: false}
   );

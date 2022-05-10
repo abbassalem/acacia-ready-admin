@@ -18,6 +18,8 @@ export class Search implements Action {
   constructor(public payload: string) {}
 }
 
+
+
 export class SearchComplete implements Action {
   readonly type = ProductActionTypes.SearchComplete;
   constructor(public payload: Product[]) {}

@@ -1,0 +1,44 @@
+
+<mat-card>    
+    <mat-card-header>
+        <mat-card-subtitle>Add new product
+        </mat-card-subtitle>
+    </mat-card-header >
+    <mat-card-content >
+      
+      <form [formGroup]="productForm" >
+          <mat-form-field>
+            <input type="text" matInput placeholder="Product name" formControlName="name">
+          </mat-form-field>
+         
+          <mat-form-field>
+            <input type="text" matInput placeholder="Product description" formControlName="description">
+          </mat-form-field>
+          <mat-form-field>
+            <input type="text" matInput placeholder="Product reference" formControlName="reference">
+          </mat-form-field>
+          <mat-form-field>
+            <input type="number" matInput placeholder="Product price" formControlName="price">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input type="text" matInput placeholder="Product image" formControlName="image">
+          </mat-form-field>
+
+        <mat-card-actions>
+            <span class="loginButtons">
+                <button mat-fab type="button" [disabled]="!productForm.valid" (click)="save()" mat-button>Save</button>
+            </span>
+            <span class="loginButtons">
+              <button mat-fab type="button"  (click)="cancelForm()" mat-button>Cancel</button>
+          </span>
+          
+        </mat-card-actions>
+        <mat-card-footer>
+         
+        </mat-card-footer>
+      </form>
+      </mat-card-content>
+  
+  </mat-card>
+  

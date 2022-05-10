@@ -7,9 +7,7 @@ import { Product } from '../models/product.model';
     
     <mat-card *ngIf="product">
       <mat-card-title>
-        <span style="float: right" *ngIf="quantity > 0">
-           <span matBadge="{{quantity}}" matBadgeOverlap="false"></span>
-      </span>
+    
       <span>{{ name }}
            <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
       </span> 
@@ -19,13 +17,13 @@ import { Product } from '../models/product.model';
           <span style="font-size: 11px" [innerHtml]="description"> </span>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button color="warn" *ngIf="inBasket" (click)="remove.emit(product)">
-            Remove from Basket
+        <button mat-raised-button color="warn"  (click)="remove.emit(product)">
+            Cancel
             <mat-icon>cancel</mat-icon>
         </button>
         <p  *ngIf="valid">
-            <button mat-raised-button color="primary" *ngIf="!inBasket" (click)="add.emit(product)">
-                Add to Basket
+            <button mat-raised-button color="primary"  (click)="add.emit(product)">
+                Save
                 <mat-icon>loupe</mat-icon>
             </button>
         </p>

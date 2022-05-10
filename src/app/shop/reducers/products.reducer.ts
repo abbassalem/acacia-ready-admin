@@ -1,7 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { ProductActionsUnion, ProductActionTypes } from '../actions/product.actions';
 import { Product } from '../models/product.model';
-// import * as fromAdapter from './index';
 
 export interface ProductState extends EntityState<Product> {
   selectedProductId: number | null;

@@ -25,15 +25,37 @@ export const initialState: CategoryState = adapter.getInitialState({
 
 export function reducer(state = initialState, action: CategoryActionsUnion ): CategoryState {
   switch (action.type) {
+    
     case CategoryActionTypes.Load: {
       return adapter.getInitialState(state);
     }
 
+    
     case CategoryActionTypes.LoadComplete: {
-      //TODO: uncomment 
       state = Object.assign({ ...state, isLoaded:true});
       return adapter.addMany(action.payload, state);
     }
+    
+    case CategoryActionTypes.CreateCategory: {
+      return adapter.addOne(action.payload, state);
+    }
+
+    case CategoryActionTypes.CreateProduct: {
+      return adapter.getInitialState(state);
+    }
+
+    // case CategoryActionTypes.CreateProductComplete: {
+    //   return adapter.getInitialState(state);
+    // }
+
+    // case CategoryActionTypes.CreateProductError: {
+    //   return adapter.getInitialState(state);
+    // }
+
+    case CategoryActionTypes.CreateCategory: {
+      return adapter.addOne(action.payload, state);
+    }
+
     case CategoryActionTypes.Select: {
       return {...state, selectedCategoryId: action.payload};
     }

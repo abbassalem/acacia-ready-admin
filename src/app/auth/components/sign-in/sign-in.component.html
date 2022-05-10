@@ -29,29 +29,4 @@
     </form>
   </mat-card-content>
 
-  <mat-card-footer>
-    <hr>
-    <b>Alternative login with:</b>
-    <p>
-      <img src="/assets/images/facebook.jpeg" width="30" height="30" (click)="loginWithProvider('facebook')">
-      <img src="/assets/images/google1.jpeg" width="30" height="30" (click)="loginWithProvider('google')">
-    </p>
-
-    <br>
-    <hr>
-    <button style="float:left" type="button" (click)="login()" mat-button>Forgot Password?</button>
-    <button style="float:right" mat-button type="button" routerLink="/auth/signup"> Register</button>
-    <br>
-
-  </mat-card-footer>
 </mat-card>
-
-
-<!--
-      <button type="button" mat-button class="btn btn-danger btn-block"  (click)="loginWithProvider('google')">
-      Login with <span style="color: red">Google</span>
-    </button>
-    <button type="button" mat-button class="btn btn-danger btn-block"  (click)="loginWithProvider('facebook')">
-      Login with <span style="color: rgb(163, 187, 87)">Facebook</span>
-    </button> 
-  -->

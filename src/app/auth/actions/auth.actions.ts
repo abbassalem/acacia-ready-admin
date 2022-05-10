@@ -6,13 +6,7 @@ export enum AuthActionTypes {
   Logout = '[Auth] Logout',
   LoginComplete = '[Auth] Login Success',
   LoginError = '[Auth] Login Failure',
-  LoginRedirect = '[Auth] Login Redirect',
-  LoginWithProvider = '[Auth] Login with Provider',
-  LoginWithProviderComplete = '[Auth] Login with Provider Success',
-  LoginWithProviderError = '[Auth] Login with Provider Failure',
-  Signup = '[Auth] Sign Up',
-  SignupComplete = '[Auth] Sign Up Success',
-  SignupError = '[Auth] Sign Up Failure',
+  LoginRedirect = '[Auth] Login Redirect'
 }
 
 export class Login implements Action {
@@ -29,35 +23,7 @@ export class LoginError implements Action {
   constructor(public payload: string) {}
 }
 
-export class LoginWithProvider implements Action {
-  readonly type = AuthActionTypes.LoginWithProvider;
-  constructor(public payload: string) {}
-}
 
-export class LoginWithProviderComplete implements Action {
-  readonly type = AuthActionTypes.LoginWithProviderComplete;
-  constructor(public payload: User) {}
-}
-
-export class LoginWithProviderError implements Action {
-  readonly type = AuthActionTypes.LoginWithProviderError;
-  constructor(public payload: string) {}
-}
-
-export class Signup implements Action {
-  readonly type = AuthActionTypes.Signup;
-  constructor(public payload: {email: String, password: String, extraData:any}) {}
-}
-
-export class SignupComplete implements Action {
-  readonly type = AuthActionTypes.SignupComplete;
-  constructor() {}
-}
-
-export class SignupError implements Action {
-  readonly type = AuthActionTypes.SignupError;
-  constructor(public payload: string) {}
-}
 
 export class LoginRedirect implements Action {
   readonly type = AuthActionTypes.LoginRedirect;
@@ -73,10 +39,4 @@ export type AuthActionsUnion =
   | LoginError
   | LoginRedirect
   | Logout
-  | LoginWithProvider
-  | LoginWithProviderComplete
-  | LoginWithProviderError
-  | Signup
-  | SignupComplete
-  | SignupError
   ;

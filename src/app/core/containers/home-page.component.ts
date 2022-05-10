@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-toolbar',
+  selector: 'app-home',
   template: `
-    <mat-toolbar color="primary">      
-      <ng-content></ng-content>
-      <img src="/assets/icon/favicon.png" width="90" height="60" style="padding-right:4px">
-      <span class="appTitle">Acacia Admin</span>
-    </mat-toolbar>
+    <p>
+      
+      <span class="appTitle">Welcome to Acacia Admin</span>
+    </p>
   `,
   styles: [`
     .appTitle{
@@ -21,10 +20,10 @@ import { Component } from '@angular/core';
       font-stretch: expanded;
       font-weight: bold;
       font-variant: small-caps ;
-      text-shadow: 4px 4px 4px maroon;
+
     }
   `]
 })
-export class ToolbarComponent {
+export class HomePageComponent {
  
 }

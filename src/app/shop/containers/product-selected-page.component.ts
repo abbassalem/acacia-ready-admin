@@ -13,22 +13,12 @@ import { OrderItem } from '../models/OrderItem.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <mat-card *ngIf="product">
-    <mat-card-actions align="center" *ngIf="!(isSelectedProductInBasket$ | async)">
-          <mat-form-field>
-              <input #qty [formControl]="quantityFormControl" type="number" [value]="0"
-                    matInput placeholder="Quantity" min="1" max="100" required>
-          </mat-form-field>
-        &nbsp;
-        <p class="price">£ <b>{{qty.value * product.price | number : '1.2-2'}}</b></p>
-    </mat-card-actions>
   <mat-card-content>
         <app-product-detail
           [product]="product"
-          [quantity]="quantity$ | async"
-          [inBasket] = "isSelectedProductInBasket$ | async"
           [valid]= "valid$ | async"
-          (add)="addToBasket($event)"
-          (remove)="removeFromBasket($event)">
+          (save)="save($event)"
+          (remove)="remove($event)">
         </app-product-detail>
     </mat-card-content>
     <mat-card-footer>

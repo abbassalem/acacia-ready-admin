@@ -4,42 +4,54 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { ProductService } from '../core/services/product.service';
+import { ProductService } from './services/product.service';
 import { MaterialModule } from '../material';
-import { ProductsComponentsModule } from './components';
+import { ProductListComponent } from './components/product-list.component';
+import { ProductDetailComponent } from './components/product-detail.component';
+import { ProductViewComponent } from './components/product-view.component';
 import { ProductListPageComponent } from './containers/product-list-page.component';
-import { ProductSelectedPageComponent } from './containers/product-selected-page.component';
 import { ProductViewPageComponent } from './containers/product-view-page.component';
 import { ProductEffects } from './effects/product.effects';
 import { reducers } from './reducers';
+import { CategoryEditComponent } from './components/category/category-edit.component';
+import { ProductyEditComponent } from './components/product/category/product-edit.component';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
-    ProductsComponentsModule,
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: '', redirectTo: 'categories/0', pathMatch: 'full'},
+      { path: 'categories/0', component: ProductListPageComponent},
       { path: 'categories/:id', component: ProductListPageComponent},
       { path: 'products/:productId', component: ProductViewPageComponent},
+      { path: 'category/new', component: CategoryEditComponent},
+      { path: 'product/new', component: ProductyEditComponent},
     ]),
 
     StoreModule.forFeature('shop', reducers),
     EffectsModule.forFeature([ProductEffects]),
   ],
   declarations: [
-    ProductSelectedPageComponent,
+    // ProductSelectedPageComponent,
     ProductViewPageComponent,
-    ProductListPageComponent
-  ]
+    ProductListPageComponent,
+    ProductListComponent,
+    ProductViewComponent,
+    ProductDetailComponent,
+    // ProductSearchComponent,
+    CategoryEditComponent,
+    ProductyEditComponent
+  ],
+  providers: [ProductService]
 })
 
 export class ShopModule {
   static forRoot(): ModuleWithProviders<NgModule> {
     return {
       ngModule: ShopModule,
-      providers: [ProductService]
+      providers: []
     };
   }
 }

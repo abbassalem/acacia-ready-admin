@@ -4,22 +4,28 @@ import { Product } from '../models/product.model';
 @Component({
   selector: 'app-product-view',
   template: `
-    <a [routerLink]="['/shop/products', id, {queryParams: {quantity:quantity}}]">
       <mat-card>
+      <a [routerLink]="['/shop/products', id, {queryParams: {quantity:quantity}}]">
+    
         <mat-card-title-group>
           <img mat-card-sm-image *ngIf="thumbnail" [src]="thumbnail"/>
           <mat-card-title class="product-title" >{{ name }}</mat-card-title>
         </mat-card-title-group>
         
-        <mat-card-footer align="end">
+      </a>
+        <mat-card-footer>
         <p style="float:left" *ngIf="quantity > 0">
           <span  [matBadge]="quantity" style="font-size:10px" matBadgeOverlap="true"></span>
         </p>
           <p class="price">£ {{ price | number : '1.2-2'}} </p>
           <p class="description" *ngIf="description">{{ description }}</p>
+          <button style="float:left: padding-botton:" color="secondary" mat-raised-button><mat-icon>edit</mat-icon>Edit</button>
+      <button style="float:right" mat-raised-button color="secondary">
+      <mat-icon>remove</mat-icon>Remove</button>
         </mat-card-footer>
       </mat-card>
-    </a>
+   
+
   `,
   styles: [
     `

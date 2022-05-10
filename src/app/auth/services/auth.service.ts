@@ -8,7 +8,7 @@ import { User } from '../models/user';
 @Injectable()
 export class AuthService {
 
-  userState: User ;
+  public userState: User ;
 
   constructor(
     public afs: AngularFirestore,
@@ -45,26 +45,6 @@ export class AuthService {
       });
   }
 
-  SignUp(email, password, extraData) {
-    return this.afAuth
-      .createUserWithEmailAndPassword(email, password)
-      .then((result) => {
-        this.SendVerificationMail();
-        this.SetUserData(result.user, extraData);
-        
-      })
-      .catch((error) => {
-        window.alert(error.message);
-      });
-  }
-
-  SendVerificationMail() {
-    return this.afAuth.currentUser
-      .then((u) => u.sendEmailVerification())
-      .then(() => {
-        this.router.navigate(['email-verification']);
-      });
-  }
 
   ForgotPassword(passwordResetEmail) {
     return this.afAuth

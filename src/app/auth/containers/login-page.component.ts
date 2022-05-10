@@ -7,7 +7,7 @@ import * as AuthActions from '../actions/auth.actions';
 @Component({
   selector: 'app-login-page',
   template: `
-    <app-sign-in (emailSubmission)="doLogin($event)" (providerSubmission)="authLogin($event)">
+    <app-sign-in (emailSubmission)="doLogin($event)">
     </app-sign-in>    
   `,
   styles: [],
@@ -27,10 +27,6 @@ export class LoginPageComponent implements OnInit{
 
   doLogin(userAuth:Authenticate) {
     this.store.dispatch(new AuthActions.Login(userAuth));
-  }
-
-  authLogin(providerName: string) {
-    this.store.dispatch(new AuthActions.LoginWithProvider(providerName));
   }
  
 }
