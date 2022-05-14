@@ -1,19 +1,21 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { BehaviorSubject } from 'rxjs';
 import * as fromCategoryActions from '../actions/category.actions';
-import { OrderItem } from '../models/OrderItem.model';
 import { Category } from '../models/category.model';
 import * as fromCategories from '../reducers/categories.reducer';
 import * as index from './../reducers/index';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-list-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-list-product
-        [categories]="categories$ | async"
-        [routeLinks]="routeLinks">
+        [categories$]="categories$.asObservable()"
+        [routeLinks]="routeLinks"
+        [currentTabIndex] = "currentCategoryIndex"
+        (changeCategoryIndex)="setCurrentCategoryIndex($event)">
     </app-list-product>
   `,
   styles: [
@@ -33,35 +35,51 @@ import * as index from './../reducers/index';
   .tabContentContainer {
       border: 1px solid #aaaaaa;
       background: #ffffff 50% 50% repeat-x;
-  }`
-  ]
+  }`]
 })
 
 export class ProductListPageComponent implements OnInit {
 
-  routeLinks: Array<{catId: number, label: string, path: string}> = new Array();
-  categories$: Observable<Category[]>;
-  selectedCategoryId$: Observable<number>;
-  orderItems$: Observable<OrderItem[]>;
-  // loading$: Observable<boolean>;
-  // error$: Observable<string>;
+  routeLinks: Array<RouteLink> = new Array<RouteLink>();
+  categories: Array<Category>;
+  categories$: BehaviorSubject<Category[]> = new BehaviorSubject(null);
+  selectedCategoryId: number;
+  currentCategoryIndex: number = 0;
 
-  constructor(private store: Store<fromCategories.CategoryState>) {
-    this.categories$ = this.store.pipe(select(index.getAllCategories));
+  constructor(private store: Store<fromCategories.CategoryState>, private route: ActivatedRoute) {
   }
 
-  ngOnInit(): void {
-    this.store.select(index.isLoaded).subscribe( loaded => {
-      if (!loaded) {
-        this.store.dispatch(new fromCategoryActions.Load());
-      } else {
-        this.categories$ = this.store.pipe(select(index.getAllCategories));
-      }
+  ngOnInit() {
+
+    this.store.dispatch(new fromCategoryActions.Load);
+    this.store.select(index.getAllCategories).subscribe( cats => {
+        this.categories$.next(cats);
+        cats.forEach((cat, i) => 
+            this.routeLinks.push({catId: cat.id, label: cat.name, path: '/shop/categories/' + i}));
+        this.selectedCategoryId  = this.routeLinks[this.currentCategoryIndex].catId;
+        this.store.dispatch(new fromCategoryActions.Select(this.selectedCategoryId))
     });
-    this.categories$.subscribe(cats => {
-      cats.forEach((cat, i) => {
-        this.routeLinks.push({catId: cat.id, label: cat.name, path: '/shop/categories/' + i});
-      });
-    });
+
+    this.route.paramMap.subscribe( params => {
+        this.currentCategoryIndex = +params.get('id');
+        console.log('pathVariable : ' + this.currentCategoryIndex);
+        if( this.routeLinks[this.currentCategoryIndex].catId ) {
+          this.selectedCategoryId  = this.routeLinks[this.currentCategoryIndex].catId;
+          console.log('selectedCategoryId router: ' + this.selectedCategoryId );
+          this.store.dispatch(new fromCategoryActions.Select(this.selectedCategoryId));
+        }
+    })
+  }
+
+  setCurrentCategoryIndex(index: number) {
+    console.log('EventEmitter catid: ' + index);
+    this.currentCategoryIndex = index;
   }  
+}
+
+
+export interface RouteLink {
+  catId: number;
+  label: string;
+  path: string
 }

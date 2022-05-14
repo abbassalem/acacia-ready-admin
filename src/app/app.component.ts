@@ -37,7 +37,7 @@ import { User } from './auth/models/user';
 
          <div style="flex: 1 1 auto;flex-direction: row">
          <span class="login" *ngIf="loggedIn$ | async">
-              <span style="padding-right: 10px;color:white">LoggedIn as: </span> <b>{{(user$ | async)?.displayName}}</b>
+              <span style="padding-right: 10px;color:white">Logged as: </span> <b>{{(user$ | async)?.displayName}}</b>
           </span>
         </div>
 </app-toolbar>

@@ -65,20 +65,6 @@ export class ProductViewPageComponent implements OnInit {
 
   product: Product;
   valid$: Observable<boolean>;
-  selectedCategoryId$: Observable<number>;
-
-  // @Input() product: Product;
-  // quantity$: Observable<number>;
-  // quantityFormControl: FormControl;
-  // orderItems: OrderItem[];
-
-
-  // constructor(private store: Store<index.ShopState>, private route: ActivatedRoute, private location: Location) {
-  // }
-
-  // ngOnInit() {
-  //   this.selectedCategoryId$ = this.store.select(index.getSelectedCategoryId);
-  // }
 
   constructor(private store: Store<fromCategoryReducer.CategoryState>, 
     private route: ActivatedRoute,

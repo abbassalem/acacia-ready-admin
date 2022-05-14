@@ -22,8 +22,8 @@ import { ProductyEditComponent } from './components/product/category/product-edi
     MaterialModule,
     ReactiveFormsModule,
     RouterModule.forChild([
-      { path: '', redirectTo: 'categories/0', pathMatch: 'full'},
-      { path: 'categories/0', component: ProductListPageComponent},
+      { path: '', redirectTo: 'categories/:id', pathMatch: 'full'},
+      // { path: 'categories/0', component: ProductListPageComponent},
       { path: 'categories/:id', component: ProductListPageComponent},
       { path: 'products/:productId', component: ProductViewPageComponent},
       { path: 'category/new', component: CategoryEditComponent},

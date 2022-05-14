@@ -150,6 +150,51 @@ createCategoryError$ = createEffect( () => {
      )
 }, {dispatch: false})
 
+removeProduct$ = createEffect( () => 
+    this.actions$.pipe(
+      ofType<fromCategoryActions.RemoveProduct>(fromCategoryActions.CategoryActionTypes.RemoveProduct),
+      switchMap( action => 
+        this.productService.removeProduct(action.payload.catId, action.payload.prodId).pipe(
+          map( prodResult  =>  {
+            console.log('remove product - productservice');
+            console.dir(prodResult);
+            return new fromCategoryActions.RemoveProductComplete({catId: prodResult.catId, prodId: prodResult.prodId});
+          }),
+          catchError( err => of(new fromCategoryActions.RemoveProductError(err)))
+      )
+    )
+    )
+  )
+
+  removeProductSuccess$ = createEffect( () => 
+     this.actions$.pipe(
+        ofType<fromCategoryActions.RemoveProductComplete>(fromCategoryActions.CategoryActionTypes.RemoveProductComplete),
+        map( action => {  
+          this.snackBar.open(`Product [${action.payload.prodId} in CategoryId [${action.payload.catId}]] removed successfully.`, 'Close',{
+            duration: 4000,
+            panelClass: ["snack-notification"],
+            horizontalPosition: "center",
+            verticalPosition: "top"
+          });
+          // this.router.navigate(['categories/', action.payload.catId]);
+          return new fromCategoryActions.Load();
+        })
+    )
+  )
+   
+  removeProductError$ = createEffect( () => {
+    return this.actions$.pipe(
+       ofType<fromCategoryActions.RemoveProductError>(fromCategoryActions.CategoryActionTypes.RemoveProductError),
+       map( action => 
+           this.snackBar.open(`Error in removing Product [${action.payload}].`, 'Close',{
+               duration: 4000,
+               panelClass: ["snack-notification"],
+               horizontalPosition: "center",
+               verticalPosition: "top"
+           })
+       )
+     )
+}, {dispatch: false})
 }
 
 

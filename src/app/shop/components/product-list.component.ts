@@ -1,10 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Component, Input, OnChanges, OnInit, Output, SimpleChanges, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RouteLink } from '../containers/product-list-page.component';
 import { Category } from '../models/category.model';
 import { Product } from '../models/product.model';
-import * as fromCategoryActions from './../actions/category.actions';
-import * as fromCategories from './../reducers/categories.reducer';
 
 @Component({
   selector: 'app-list-product',
@@ -17,7 +15,7 @@ import * as fromCategories from './../reducers/categories.reducer';
               [routerLink]="routeLink.path"
               routerLinkActive #rla="routerLinkActive"
               [active]="rla.isActive">
-              <b style="color: blue">{{routeLink.label}} &nbsp; &nbsp;</b>
+              <span style="color: blue">{{routeLink.label}} &nbsp; &nbsp;</span>
               
               <button *ngIf="rla.isActive" style="color:green; font-weight: bold"  
                 [color]="'secondary'"  mat-button
@@ -30,12 +28,13 @@ import * as fromCategories from './../reducers/categories.reducer';
       </nav>
     </span>
 </mat-toolbar>
+
 <div style="display:flex; flex-wrap: wrap; align-content: flex-start;" *ngIf= "!editFormVisible">
-<app-product-view  *ngFor="let product of products" [product]="product">
-</app-product-view>
+    <app-product-view  *ngFor="let product of products" [product]="product">
+    </app-product-view>
 </div>
 
-<app-edit-product *ngIf= "editFormVisible" [categoryId]="selectedCategoryId" 
+<app-edit-product *ngIf= "editFormVisible" [categoryId]="routeLinks[currentTabIndex].catId" 
     (close)="hideForm($event)" >
 </app-edit-product>
 
@@ -57,39 +56,40 @@ import * as fromCategories from './../reducers/categories.reducer';
 
 export class ProductListComponent implements OnInit, OnChanges {
 
-  @Input() categories: Category[];
-  @Input() routeLinks: Array<{ catId: number, label: string, path: string }>;
-  products: Product[];
-  currentTabIndex = 0;
-  selectedCategoryId: number;
+  @Input() categories$: Observable<Category[]>;
+  @Input() routeLinks: Array<RouteLink>;
+  
+  categories: Category[];
+  products: Array<Product>;
+  @Input() currentTabIndex = 0 ;
+  @Output() changeCategoryIndex: EventEmitter<number> = new EventEmitter();
   editFormVisible: boolean = false;
 
-  constructor(private store: Store<fromCategories.CategoryState>, private route: ActivatedRoute) {
+  constructor() {
   }
 
    ngOnInit() {
-   this.route.params.subscribe(params => {
-      this.editFormVisible = false;
-      this.currentTabIndex = +params['id'];
-      if (this.routeLinks[this.currentTabIndex]) {
-        this.store.dispatch(new fromCategoryActions.Select(this.routeLinks[this.currentTabIndex].catId));
-      }
-      if (this.categories[this.currentTabIndex]) {
-        this.products = this.categories[this.currentTabIndex].products;
-      }
-    });
-    console.log('category current iindex');
-    console.dir(this.routeLinks[this.currentTabIndex].catId);
-    this.selectedCategoryId = this.routeLinks[this.currentTabIndex].catId;
-  }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.categories[this.currentTabIndex]) {
+    this.categories$.subscribe( cats => {
+      console.log('currentTabIndex: ' + this.currentTabIndex);
+      this.categories = cats;
+
+      if (this.categories[this.currentTabIndex]) {
+        this.products = cats[this.currentTabIndex].products;
+        this.changeCategoryIndex.emit(this.currentTabIndex);
+      }
+      });
+   
+   }
+
+   ngOnChanges(changes: SimpleChanges): void {
+
+    if (this.categories && this.categories[this.currentTabIndex]) {
       this.products = this.categories[this.currentTabIndex].products;
-      this.store.dispatch(new fromCategoryActions.Select(this.categories[this.currentTabIndex].id));
-      this.selectedCategoryId = this.routeLinks[this.currentTabIndex].catId;
+      this.changeCategoryIndex.emit(this.currentTabIndex);
     }
-  }
+
+   }
 
   hideForm(event){
     this.editFormVisible = false;

@@ -7,6 +7,7 @@ import { Product } from '../models/product.model';
 import * as index from '../reducers/index';
 import { Location } from '@angular/common';
 import { OrderItem } from '../models/OrderItem.model';
+import * as fromCategories from '../actions/category.actions';
 
 @Component({
   selector: 'app-product-selected-page',
@@ -63,35 +64,28 @@ import { OrderItem } from '../models/OrderItem.model';
 export class ProductSelectedPageComponent implements OnInit {
 
   @Input() product: Product;
-  quantity$: Observable<number>;
   quantityFormControl: FormControl;
   valid$: Observable<boolean>;
   selectedCategoryId$: Observable<number>;
+  selectedCategoryId: number;
   orderItems: OrderItem[];
   
   constructor(private store: Store<index.ShopState>, private route: ActivatedRoute, private location: Location) {
   }
 
   ngOnInit() {
-    this.quantityFormControl = new FormControl(0, [Validators.required]);
     this.valid$ = this.quantityFormControl.valueChanges;
     this.selectedCategoryId$ = this.store.select(index.getSelectedCategoryId);
+    this.selectedCategoryId$.subscribe(id => this.selectedCategoryId = id);
 
   }
 
-  getQuantity(values) {
-    let qty;
-    if (values) {
-      qty = values.find(item => item.id === this.product.id);
-      if (qty) {
-        return qty.quantity;
-      } else {
-        return 0;
-      }
-    }
+  remove(product){
+    this.store.dispatch(new fromCategories.RemoveProduct({catId: this.selectedCategoryId, prodId: product.id} ));
   }
 
   back() {
-    history.back();
+    this.location.back();
   }
+
 }

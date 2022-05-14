@@ -18,13 +18,20 @@ export class DbService {
     }
 
     getNextProductId(catId: number) {
+        console.log('getNextProductId - catId');
+        console.dir(catId);
         console.log('DbService generateProductId');
         let ref = this.db.collection('categories', ref => ref.where('id', '==', catId))
         .get().subscribe(query => {
             const products  = query.docs[0].get('products');
             console.log('products; ' + length);
             console.dir(products);
-            this.nextProductId$.next(products.length+1);
+            if(products){
+                this.nextProductId$.next(products.length+1);
+            }else{
+                console.log('next productId: <<1>>' ) 
+                this.nextCategoryId$.next(1);
+            }
             });
     }
 

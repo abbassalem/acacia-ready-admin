@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { FIREBASE_APP_NAME } from '@angular/fire/compat';
 import { Product } from '../models/product.model';
-import { arrayUnion } from 'firebase/firestore';
+import { arrayRemove, arrayUnion } from 'firebase/firestore';
 
 
 @Injectable({providedIn: 'any', useExisting: FIREBASE_APP_NAME, useValue: 'db'}
@@ -35,7 +35,7 @@ export class ProductService {
   createCategory(cat: Category): Observable<any> {
 
     let p: Promise<void> = this.db.collection('categories')
-      .doc(cat.id.toString()).set({id: cat.id, name: cat.name, description: cat.description});
+      .doc(cat.id.toString()).set({id: cat.id, name: cat.name, description: cat.description, products: []});
     return of(p);  
   } 
 
@@ -50,6 +50,17 @@ export class ProductService {
       return of({catId: catId, product: product });
     
     }
+
+    removeProduct(catId: number, prodId: number): Observable<any> {
+
+      console.log('catId: ' + catId, ' prodId: ' + prodId);
+      const p = this.db.collection('categories')
+      .doc(catId.toString())
+        .update({products: arrayRemove(prodId)});
+      
+        return of({catId: catId, prodId: prodId });
+      
+      }
 
 }
 

@@ -16,7 +16,10 @@ export enum CategoryActionTypes {
   CreateCategoryError = '[Category] Create Error',
   CreateProduct = '[Product] Create',
   CreateProductComplete = '[Product] Create Complete',
-  CreateProductError = '[Product] Create Error'
+  CreateProductError = '[Product] Create Error',
+  RemoveProduct = '[Product] Remove',
+  RemoveProductComplete = '[Product] Remove Complete',
+  RemoveProductError = '[Product] Remove Error',
 }
 
 export class CreateCategory implements Action {
@@ -46,6 +49,21 @@ export class CreateProductComplete implements Action {
 
 export class CreateProductError implements Action {
   readonly type = CategoryActionTypes.CreateProductError;
+  constructor(public payload:any) {}
+}
+
+export class RemoveProduct implements Action {
+  readonly type = CategoryActionTypes.RemoveProduct;
+  constructor(public payload:{catId: number, prodId: number}) {}
+}
+
+export class RemoveProductComplete implements Action {
+  readonly type = CategoryActionTypes.RemoveProductComplete;
+  constructor(public payload:{catId: number, prodId: number}) {}
+}
+
+export class RemoveProductError implements Action {
+  readonly type = CategoryActionTypes.RemoveProductError;
   constructor(public payload:any) {}
 }
 
@@ -104,5 +122,8 @@ export type CategoryActionsUnion =
   | CreateCategoryError
   | CreateProduct
   | CreateProductComplete
-  | CreateProductError;
+  | CreateProductError
+  | RemoveProduct
+  | RemoveProductComplete
+  | RemoveProductError;
 
