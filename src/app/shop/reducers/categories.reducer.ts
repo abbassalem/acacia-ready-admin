@@ -44,6 +44,10 @@ export function reducer(state = initialState, action: CategoryActionsUnion ): Ca
       return adapter.getInitialState(state);
     }
 
+    case CategoryActionTypes.RemoveProduct: {
+      return adapter.getInitialState(state);
+    }
+
     // case CategoryActionTypes.CreateProductComplete: {
     //   return adapter.getInitialState(state);
     // }
