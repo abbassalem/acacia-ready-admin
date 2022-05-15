@@ -6,24 +6,40 @@ export enum AuthActionTypes {
   Logout = '[Auth] Logout',
   LoginComplete = '[Auth] Login Success',
   LoginError = '[Auth] Login Failure',
-  LoginRedirect = '[Auth] Login Redirect'
+  LoginRedirect = '[Auth] Login Redirect',
+  FetchedUsers = '[Auth] fetchUsers',
+  FetchedUsersComplete = '[Auth] fetchUsers Complete',
+  FetchedUsersError = '[Auth] fetchUsers Error'
+}
+
+export class FetchedUsers implements Action {
+  readonly type = AuthActionTypes.FetchedUsers;
+  constructor(public payload: string) { }
+}
+
+export class FetchedUsersComplete implements Action {
+  readonly type = AuthActionTypes.FetchedUsersComplete;
+  constructor(public payload: Array<User>) { }
+}
+
+export class FetchedUsersError implements Action {
+  readonly type = AuthActionTypes.FetchedUsersError;
+  constructor(public payload: any) { }
 }
 
 export class Login implements Action {
   readonly type = AuthActionTypes.Login;
-  constructor(public payload: Authenticate) {}
+  constructor(public payload: Authenticate) { }
 }
 export class LoginComplete implements Action {
   readonly type = AuthActionTypes.LoginComplete;
-  constructor(public payload: User) {}
+  constructor(public payload: User) { }
 }
 
 export class LoginError implements Action {
   readonly type = AuthActionTypes.LoginError;
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
 }
-
-
 
 export class LoginRedirect implements Action {
   readonly type = AuthActionTypes.LoginRedirect;
@@ -39,4 +55,7 @@ export type AuthActionsUnion =
   | LoginError
   | LoginRedirect
   | Logout
+  | FetchedUsers
+  | FetchedUsersComplete
+  | FetchedUsersError
   ;

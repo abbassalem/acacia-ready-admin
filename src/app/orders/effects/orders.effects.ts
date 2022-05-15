@@ -59,7 +59,7 @@ export class OrdersEffects {
       ofType<fromOrderActions.Load>(fromOrderActions.OrderActionTypes.Load),
       switchMap( action => {
         let res: Order[];
-        return this.orderService.getOrders(action.payload.userId, action.payload.durationWithStatus)
+        return this.orderService.getOrders(action.payload.orderSearchCriteria)
         .pipe(
           map( q => {
               resOrders =  q.docs.map( 

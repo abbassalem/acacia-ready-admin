@@ -1,9 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
-import {AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/firestore';
+import {AngularFirestore,AngularFirestoreDocument, DocumentData} from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { User } from '../models/user';
+import * as firestore from 'firebase/firestore';
+import { Observable, of } from 'rxjs';
+import { QuerySnapshot } from 'firebase/firestore';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +14,7 @@ export class AuthService {
   public userState: User ;
 
   constructor(
-    public afs: AngularFirestore,
+    public db: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
     public ngZone: NgZone
@@ -26,6 +29,12 @@ export class AuthService {
         JSON.parse(localStorage.getItem('user'));
       }
     });
+  }
+
+  fetchUsers(email: string){
+
+    return this.db.collection('users', 
+            ref => ref.where('email', '>=', email ).where('email', '<=', email + '\uf8ff')).get();
   }
 
   SignIn(email, password): Promise<User> {
@@ -80,7 +89,7 @@ export class AuthService {
 
 
   async SetUserData(user, extraData?): Promise<User> {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(
+    const userRef: AngularFirestoreDocument<any> = this.db.doc(
       `users/${user.uid}`
     );
     const userState: User = {

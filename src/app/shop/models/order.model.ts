@@ -22,8 +22,9 @@ export enum OrderStatus {
 }
 
 
-export interface DurationWithStatus {
+export interface OrderSearchCriteria {
     start: number;
     end: number;
     status?: string;
+    userId?: string;
   }

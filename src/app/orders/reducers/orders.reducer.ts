@@ -46,15 +46,22 @@ export function reducer(state = initialState, action: OrderActionsUnion): OrderS
       return state;
     }
 
+
     case OrderActionTypes.Load: {
       return state;
     }
 
+    
     case OrderActionTypes.LoadComplete: {
       return adapter.addMany(action.payload, state);
     }
 
     case OrderActionTypes.LoadError: {
+      return state;
+    }
+
+   
+    case OrderActionTypes.Load: {
       return state;
     }
 

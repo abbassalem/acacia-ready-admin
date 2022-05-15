@@ -2,12 +2,14 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError} from 'rxjs/operators';
+import { of } from 'rxjs';
 import * as fromAuthActions from '../actions/auth.actions';
 import { AuthService } from '../services/auth.service';
 import { Reset } from '../../orders/actions/orders.actions';
 import { OrderState } from '../../orders/reducers/orders.reducer';
 import { Store } from '@ngrx/store';
+import { User } from '../models/user';
 
 @Injectable()
 export class AuthEffects {
@@ -57,4 +59,32 @@ export class AuthEffects {
     )}, {dispatch: false}
   );
 
+  fetchUsers$ = createEffect( () => {
+    let users: Array<User>;
+    return this.actions$.pipe(
+          ofType<fromAuthActions.FetchedUsers>(fromAuthActions.AuthActionTypes.FetchedUsers),
+          switchMap( (action: fromAuthActions.FetchedUsers) => 
+            this.authService.fetchUsers(action.payload)
+          ),
+          map( q => {
+            users = q.docs.map( doc => <User>doc.data());
+            return new fromAuthActions.FetchedUsersComplete(users);
+          }),
+          catchError (error => of(error))
+      )
+  }, {dispatch: true}
+  );
+
+  fetchUsersSuccess$ =  createEffect( () => {
+    return this.actions$.pipe(
+        ofType<fromAuthActions.FetchedUsersComplete>(fromAuthActions.AuthActionTypes.FetchedUsersComplete),
+            switchMap( (action) => {
+              console.log('auth effect fetchUsercomplete');
+              console.dir(action.payload);
+        
+            return of(null);
+            }
+      ))
+    }, { dispatch: false });
+  
 }

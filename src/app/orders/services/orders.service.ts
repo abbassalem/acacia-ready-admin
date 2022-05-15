@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Order, DurationWithStatus} from '../../shop/models/order.model';
+import { Order, OrderSearchCriteria} from '../../shop/models/order.model';
 import { AngularFirestore, DocumentData , QuerySnapshot } 
         from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
@@ -20,13 +20,13 @@ export class OrderService {
 
 
    // TODO: use duration to filter 
-  getOrders(userId: string, inputDurationWithStatus: DurationWithStatus): Observable<QuerySnapshot<DocumentData>> {
-    console.log('service => duration getOrders: ');
-    console.dir(inputDurationWithStatus);
+  getOrders(orderSearchCriteria: OrderSearchCriteria): Observable<QuerySnapshot<DocumentData>> {
+    console.log('service => order search criteria');
+    console.dir(orderSearchCriteria);
 
-       if(inputDurationWithStatus.status == 'ALL'){
+       if(orderSearchCriteria.status == 'ALL'){
           return this.db.collection('orders', 
-            ref => ref.where('userId', '==', userId)
+            ref => ref.where('userId', '==', orderSearchCriteria.userId)
                   // .where('orderDate', '>=', inputDurationWithStatus.start)
                   // .where('orderDate', '<=', inputDurationWithStatus.end)
                   // .where('status', '==', inputDurationWithStatus.status)
@@ -35,10 +35,10 @@ export class OrderService {
             .get();
        } else {
         return this.db.collection('orders', 
-            ref => ref.where('userId', '==', userId)
+            ref => ref.where('userId', '==', orderSearchCriteria.userId)
                     // .where('orderDate', '>=', inputDurationWithStatus.start)
                     // .where('orderDate', '<=', inputDurationWithStatus.end)
-                    .where('status', '==', inputDurationWithStatus.status)
+                    .where('status', '==', orderSearchCriteria.status)
                     // .orderBy( "orderDate", "desc" )
                     )
             .get();

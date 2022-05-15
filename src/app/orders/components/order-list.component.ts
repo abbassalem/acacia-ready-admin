@@ -1,16 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
-import { DurationWithStatus, Order } from '../../shop/models/order.model';
+import { Component, Input } from '@angular/core';
+import { Order } from '../../shop/models/order.model';
 
 @Component({
   selector: 'app-order-list',
   template: `
-  <mat-card>
-  <app-order-search (searchWithDates)= "propagateSearch($event)"></app-order-search>
+
   <mat-accordion  style="width: 100%;">
     <app-order-view  *ngFor="let orderElement of orders" [order]="orderElement"> </app-order-view>
   </mat-accordion>
-  </mat-card>
   
 `,
   styles: [
@@ -30,15 +27,11 @@ import { DurationWithStatus, Order } from '../../shop/models/order.model';
 
 export class OrderListComponent {
 
-  @Output() searching = new EventEmitter<DurationWithStatus>() ;
   @Input() orders: Order[];
 
   constructor() {
   }
 
-  propagateSearch(event: DurationWithStatus) {
-    this.searching.emit(event);
-  }
 
   // filterDate(order: Order, start: Date, end: Date) {
   //     const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
