@@ -5,26 +5,36 @@ import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { MaterialModule } from '../material';
-import { OrderComponentsModule } from './components';
 import { OrderListPageComponent } from './containers/order-list-page.component';
 import { OrdersEffects } from './effects/orders.effects';
 import { OrderService } from './services/orders.service';
 import { reducer } from './reducers/orders.reducer';
+import { OrderViewPageComponent } from './containers/order-view-page.component';
+import { OrderListComponent } from './components/order-list.component';
+import { OrderViewComponent } from './components/order-view.component';
+import { PipesModule } from '../shared/pipes';
+import { OrderSearchComponent } from './components/order-search.component';
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
-    OrderComponentsModule,
     ReactiveFormsModule,
+    PipesModule,
     RouterModule.forChild([
       { path: '', component: OrderListPageComponent}
     ]),
     StoreModule.forFeature('orders', reducer ),
     EffectsModule.forFeature([OrdersEffects]),
   ],
-  declarations: [
-    OrderListPageComponent  ],
+  declarations: [  
+    OrderViewComponent,
+    OrderSearchComponent,
+    OrderListComponent,
+    OrderViewComponent,
+    OrderViewPageComponent,
+    OrderListPageComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [OrdersEffects,OrderService]
 })

@@ -24,28 +24,35 @@ export class OrderService {
     console.log('service => order search criteria');
     console.dir(orderSearchCriteria);
 
+    if(orderSearchCriteria.userId){
        if(orderSearchCriteria.status == 'ALL'){
           return this.db.collection('orders', 
-            ref => ref.where('userId', '==', orderSearchCriteria.userId)
-                  // .where('orderDate', '>=', inputDurationWithStatus.start)
-                  // .where('orderDate', '<=', inputDurationWithStatus.end)
-                  // .where('status', '==', inputDurationWithStatus.status)
-                  // .orderBy( "orderDate", "desc" )
-                  )
-            .get();
+            ref => ref.where('userId', '==', orderSearchCriteria.userId)).get();
        } else {
-        return this.db.collection('orders', 
+          return this.db.collection('orders', 
             ref => ref.where('userId', '==', orderSearchCriteria.userId)
-                    // .where('orderDate', '>=', inputDurationWithStatus.start)
-                    // .where('orderDate', '<=', inputDurationWithStatus.end)
-                    .where('status', '==', orderSearchCriteria.status)
-                    // .orderBy( "orderDate", "desc" )
-                    )
-            .get();
-       }
+                      .where('status', '==', orderSearchCriteria.status)).get();
+       } 
+    } else {
+        if(orderSearchCriteria.status == 'ALL'){
+          return this.db.collection('orders').get();
+        } else {
+          return this.db.collection('orders', 
+            ref => ref.where('status', '==', orderSearchCriteria.status)).get();
+        } 
+    }
+      //  } else {
+      //   return this.db.collection('orders', 
+      //       ref => ref.where('userId', '==', orderSearchCriteria.userId)
+      //               // .where('orderDate', '>=', inputDurationWithStatus.start)
+      //               // .where('orderDate', '<=', inputDurationWithStatus.end)
+      //               .where('status', '==', orderSearchCriteria.status)
+      //               // .orderBy( "orderDate", "desc" )
+      //               )
+      //       .get();
+      //  }
   }
 
-  
   filterDate(order: Order, start: Date, end: Date) {
       const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
       const e = new Date(end.getFullYear(), end.getMonth(), end.getDate());

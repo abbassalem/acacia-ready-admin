@@ -4,11 +4,10 @@ import { Order } from '../../shop/models/order.model';
 @Component({
   selector: 'app-order-list',
   template: `
-
-  <mat-accordion  style="width: 100%;">
-    <app-order-view  *ngFor="let orderElement of orders" [order]="orderElement"> </app-order-view>
-  </mat-accordion>
-  
+        <mat-accordion style="min-width: 100%;">
+          <app-order-view-page  
+            *ngFor="let singleOrder of orders" [orderForPage]="singleOrder" > </app-order-view-page>
+        </mat-accordion>
 `,
   styles: [
     `
@@ -32,16 +31,4 @@ export class OrderListComponent {
   constructor() {
   }
 
-
-  // filterDate(order: Order, start: Date, end: Date) {
-  //     const s = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-  //     const e = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-  //     const dd = new Date(order.orderDate);
-  //     const d = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate());
-  //     if ( d >= s && d <= e ) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  // }
 }

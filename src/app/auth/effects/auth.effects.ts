@@ -87,4 +87,33 @@ export class AuthEffects {
       ))
     }, { dispatch: false });
   
+
+    loadOrderUsers$ = createEffect( () => {
+      let user: User;
+      return this.actions$.pipe(
+            ofType<fromAuthActions.LoadOrderUser>(fromAuthActions.AuthActionTypes.LoadOrderUser),
+            switchMap( (action: fromAuthActions.LoadOrderUser) => 
+              this.authService.loadUser(action.payload)
+            ),
+            map( q => {
+              user = <User>q.docs[0].data();
+              return new fromAuthActions.LoadOrderUserComplete(user);
+            }),
+            catchError (error => of(error))
+        )
+    }, {dispatch: true}
+    );
+  
+    loadOrderUserSuccess$ =  createEffect( () => {
+      return this.actions$.pipe(
+          ofType<fromAuthActions.LoadOrderUserComplete>(fromAuthActions.AuthActionTypes.LoadOrderUserComplete),
+              switchMap( (action) => {
+                console.log('auth effect LoadOrderUserComplete');
+                console.dir(action.payload);
+          
+              return of(null);
+              }
+        ))
+      }, { dispatch: false });
+
 }

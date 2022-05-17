@@ -11,16 +11,21 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
   <mat-card>
     <mat-card-title style="text-align:start  ;"><small><b>Search order</b></small></mat-card-title>
     <mat-card-content>
-            <!-- <mat-form-field>
+          <!-- <mat-spinner [class.show]="searching" [diameter]="20" [strokeWidth]="2"></mat-spinner> -->
+              <button style="align-content: flex-start;" mat-flat-button color="accent" [disabled]="!searchGroup.valid" (click) = "executeSearch()">
+                <mat-icon>search</mat-icon>Search
+            </button>
+            &nbsp;&nbsp;
+            <mat-form-field style="max-width: fit-content;">
                   <input  matInput [matDatepicker]="picker1" placeholder="Choose start date" formControlName="startDate">
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field style="max-width: fit-content;">
                   <input matInput [matDatepicker]="picker2" placeholder="Choose end date" formControlName="endDate">
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                   <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field> -->
+            </mat-form-field>
             
             <mat-form-field>
               <input matInput formControlName ="orderUser" 
@@ -29,9 +34,14 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
                   <mat-option *ngFor="let user of (fetchedUsers$ | async)" [value]="user">
                     {{user.email}}
                   </mat-option>
-            </mat-autocomplete>
+              </mat-autocomplete>
             </mat-form-field>
-            &nbsp;&nbsp;&nbsp;
+            
+            &nbsp;&nbsp;
+            <mat-row>
+              <span>Name: <b>{{selectedUser?.displayName}}</b> - Phone: <b>{{selectedUser?.phoneNumber}}</b></span>
+            </mat-row>
+              
             <mat-form-field>
                   <mat-select formControlName="orderStatus">
                     <mat-option *ngFor= "let status of statusList" [value]="status.value" 
@@ -39,12 +49,6 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
                     </mat-option>
                   </mat-select>
             </mat-form-field>
-            
-                <mat-spinner [class.show]="searching" [diameter]="20" [strokeWidth]="2"></mat-spinner>
-              <button mat-raised-button color="accent" [disabled]="!searchGroup.valid" (click) = "executeSearch()">
-                <mat-icon>search</mat-icon>Search
-            </button>
-           
           </mat-card-content>
         </mat-card>
       </form>
@@ -90,8 +94,7 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
   @Output() searchCriteriaChange = new EventEmitter<OrderSearchCriteria>();
   @Output() usersForAutoChange = new EventEmitter<string>();
 
-  userEmailFilter: Observable<string[]>;
-
+  selectedUser: User;
   searchGroup: FormGroup;
   statusList: Status[] = [];
   userSubscription: Subscription;
@@ -120,7 +123,11 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
           console.dir(val);
           if ( typeof val === 'string'){
             this.usersForAutoChange.emit(val);
-          } 
+          } else {
+            console.log('selectedUser: ');
+            console.dir(val);
+             this.selectedUser = val;
+          }
 
         });
   }
@@ -139,7 +146,7 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
       start: this.searchGroup.get('startDate').value.getTime(),
       end: this.searchGroup.get('endDate').value.getTime(),
       status: this.searchGroup.get('orderStatus').value,
-      userId: this.searchGroup.get('orderUser').value.uid
+      userId: this.searchGroup.get('orderUser')?.value?.uid
     };
     this.searchCriteriaChange.emit(orderSearchCriteria);
   }

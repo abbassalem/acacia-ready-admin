@@ -9,7 +9,11 @@ export enum AuthActionTypes {
   LoginRedirect = '[Auth] Login Redirect',
   FetchedUsers = '[Auth] fetchUsers',
   FetchedUsersComplete = '[Auth] fetchUsers Complete',
-  FetchedUsersError = '[Auth] fetchUsers Error'
+  FetchedUsersError = '[Auth] fetchUsers Error',
+  LoadOrderUser = '[Auth] Load User',
+  LoadOrderUserComplete = '[Auth] Load User Complete',
+  LoadOrderUserError = '[Auth] Load Use Error'
+
 }
 
 export class FetchedUsers implements Action {
@@ -41,6 +45,21 @@ export class LoginError implements Action {
   constructor(public payload: string) { }
 }
 
+export class LoadOrderUser implements Action {
+  readonly type = AuthActionTypes.LoadOrderUser;
+  constructor(public payload: string) { }
+}
+
+export class LoadOrderUserComplete implements Action {
+  readonly type = AuthActionTypes.LoadOrderUserComplete;
+  constructor(public payload: User) { }
+}
+
+export class LoadOrderUserError implements Action {
+  readonly type = AuthActionTypes.LoadOrderUserError;
+  constructor(public payload: string) { }
+}
+
 export class LoginRedirect implements Action {
   readonly type = AuthActionTypes.LoginRedirect;
 }
@@ -58,4 +77,7 @@ export type AuthActionsUnion =
   | FetchedUsers
   | FetchedUsersComplete
   | FetchedUsersError
+  | LoadOrderUser
+  | LoadOrderUserComplete 
+  | LoadOrderUserError 
   ;

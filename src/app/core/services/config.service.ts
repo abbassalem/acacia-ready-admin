@@ -8,9 +8,8 @@ import { FIREBASE_APP_NAME } from '@angular/fire/compat';
 export class ConfigService {
 
   constructor(private db: AngularFirestore ){
-     console.log('configService');
      db.collection('/orders').get().subscribe(snap => {
-       console.dir(snap.size);
+      //  console.dir(snap.size);
       //  snap.forEach(doc => console.dir(doc.data()));
      }
     );

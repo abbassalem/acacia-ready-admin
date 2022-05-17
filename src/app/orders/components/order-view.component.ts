@@ -1,30 +1,40 @@
-import { Component, Input } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
-import { Store } from '@ngrx/store';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from 'src/app/auth/models/user';
 import { Order } from '../../shop/models/order.model';
-import { ShopState } from '../../shop/reducers';
 
 @Component({
   selector: 'app-order-view',
   template: `
 <br>
-  <mat-expansion-panel  (opened)="open(id)" (closed)="panelOpenState = false"  style="width: 80%">
-      <mat-expansion-panel-header>
+  <mat-expansion-panel  (opened)="open(id)" (closed)="panelOpenState = false"  style="width: 100%">
+      <mat-expansion-panel-header style="color:'blue'; font-size: 12px">
           <img mat-card-sm-image style="width:20px;height:20px" *ngIf="thumbnail" [src]="thumbnail"/>
           &nbsp;&nbsp;&nbsp;&nbsp;Order Date:<b>{{ orderDate | date: 'dd/MM/yyyy:HH:mm' }}</b>
           &nbsp;&nbsp;&nbsp;&nbsp;Amount: <b>{{ amount | currency : 'EUR':'symbol':'1.2-2'}} </b>
           &nbsp;&nbsp;&nbsp;&nbsp;Delivery Date: <b>{{ deliveryDate | date: 'dd/MM/yyyy'}} </b>
           &nbsp;&nbsp;&nbsp;&nbsp;Delivery Time: <b>{{ deliveryTime }}</b>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paid:&nbsp;<mat-checkbox width="20%" [checked]= "order.paid" [disabled]="true" color="accent" ></mat-checkbox>
-          &nbsp;
+          &nbsp;&nbsp;&nbsp;
+          
+          <!-- &nbsp;&nbsp; Customer Info:<b>{{ userId }}</b> &nbsp;&nbsp;   -->
+          <button mat-mini-fab (click)="loadUser(userId)">
+              <mat-icon>person</mat-icon>
+          </button> 
+          
+          <!-- <span *ngIf="user$">
+            Email: <b>{{(user$ | async)?.email}}</b> - Name: <b>{{(user$ | async)?.email}}</b> - 
+            Phone: <b>{{(user$ | async)?.phoneNumber}}</b>
+          </span> -->
     </mat-expansion-panel-header>
-    <!-- <mat-action-row>
-    <button mat-raised-button color="accent" (click) = "addToBasket('Items added to basket successfully')">
-      <mat-icon>add_to_photos</mat-icon>Add to basket
-    </button>
-    </mat-action-row> -->
+    <mat-action-row>
+      <button mat-raised-button color="accent">
+        <mat-icon>edit</mat-icon>Edit
+      </button>
+    </mat-action-row>
 
     <ng-template matExpansionPanelContent>
+
         <table mat-table [dataSource]="orderItems" class="mat-elevation-z8" style="min-width: 70%">
 
           <ng-container matColumnDef="name">
@@ -50,6 +60,12 @@ import { ShopState } from '../../shop/reducers';
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
+        <br>
+        <span *ngIf="(user$ | async)">
+            Email: <b>{{(user$ | async)?.email}}</b> - Name: <b>{{(user$ | async)?.email}}</b> - 
+            Phone: <b>{{(user$ | async)?.phoneNumber}}</b>
+          </span>
+          <br>
     </ng-template>
 </mat-expansion-panel>
   `,
@@ -59,6 +75,7 @@ import { ShopState } from '../../shop/reducers';
     mat-card-content,
     mat-card-footer {
       display: flex;
+      width: 100%;
       justify-content: center;
     }
 
@@ -89,10 +106,15 @@ import { ShopState } from '../../shop/reducers';
   ],
 })
 
-export class OrderViewComponent {
+export class OrderViewComponent implements OnChanges {
 
   @Input()
   order: Order;
+
+  @Input()
+  user$: Observable<User>;
+
+  @Output() loadUserEvent: EventEmitter<string> = new EventEmitter();
 
   orderItems: Array<OrderItem> = [];
 
@@ -100,7 +122,14 @@ export class OrderViewComponent {
   
   displayedColumns: string[] = ['name', 'price', 'quantity', 'subTotal'];
 
-  constructor(private store: Store<ShopState>, private snackBar: MatSnackBar) {
+  constructor() {
+    console.log('constructor order-view');
+  }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('======>>>order-view ngOnChanges');
+    console.table(changes);
   }
 
   get id() {
@@ -117,6 +146,10 @@ export class OrderViewComponent {
 
   get deliveryTime() {
     return this.order.deliveryTime;
+  }
+
+  get userId() {
+    return this.order.userId;
   }
 
   get status() {
@@ -167,6 +200,10 @@ export class OrderViewComponent {
     console.log('order Id: ' + id);
     this.loadItems();
     this.panelOpenState = true;
+  }
+
+  loadUser(userId){
+      this.loadUserEvent.emit(userId);
   }
 }
 

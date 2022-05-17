@@ -53,7 +53,7 @@ export class OrdersEffects {
     }, { dispatch: false });
   
 
-  getAllOrders$ = createEffect( () => {
+  loadOrders$ = createEffect( () => {
     let resOrders: any;
     return this.actions$.pipe(
       ofType<fromOrderActions.Load>(fromOrderActions.OrderActionTypes.Load),

@@ -5,7 +5,6 @@ import { OrderSearchCriteria, Order } from '../../shop/models/order.model';
 import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
 import * as fromOrderReducer from '../reducers/orders.reducer';
 import { Load, Reset } from '../actions/orders.actions';
-import { getUser } from 'src/app/reducers';
 import { filter, map } from 'rxjs/operators';
 import * as fromAuthActions from '../../auth/actions/auth.actions'
 import { User } from 'src/app/auth/models/user';
@@ -18,8 +17,7 @@ import { User } from 'src/app/auth/models/user';
     (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
     <br>
-    <app-order-list (searching)="executeQuery($event)" 
-                    [orders]="orders$ | async">
+    <app-order-list (searching)="executeQuery($event)" [orders]="orders$ | async">
   </app-order-list>
   `,
   styles: [
@@ -35,19 +33,16 @@ export class OrderListPageComponent implements OnInit {
 
   orders$: Observable<Order[]>;
   selectedOrderId$: Observable<string>;
-  loggedUserId: string;
   fetchedUsers$: Observable<Array<User>>;
 
   constructor(private authStore: Store<fromAuthReducer.State>, 
               private orderStore: Store<fromOrderReducer.OrderState>) {
   }
 
+  
   ngOnInit(): void {  
-    this.authStore.select(getUser).subscribe(user => {
-      this.loggedUserId = user.uid;
-    });
   }
-
+  
   fetchUsersForAuto(email: string) {
       this.authStore.dispatch(new fromAuthActions.FetchedUsers(email));
       this.fetchedUsers$ = this.authStore.select(fromAuthReducer.getFetchedUsers);

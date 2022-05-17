@@ -31,6 +31,10 @@ export class AuthService {
     });
   }
 
+  loadUser(userId: string){
+    return this.db.collection('users', ref => ref.where('uid', '==', userId )).get();
+  }
+
   fetchUsers(email: string){
 
     return this.db.collection('users', 
@@ -53,7 +57,6 @@ export class AuthService {
         return Promise.reject('error in signin');
       });
   }
-
 
   ForgotPassword(passwordResetEmail) {
     return this.afAuth
@@ -89,9 +92,9 @@ export class AuthService {
 
 
   async SetUserData(user, extraData?): Promise<User> {
-    const userRef: AngularFirestoreDocument<any> = this.db.doc(
-      `users/${user.uid}`
-    );
+
+    const userRef: AngularFirestoreDocument<any> = this.db.doc(`users/${user.uid}`);
+
     const userState: User = {
       uid: user.uid,
       email: user.email,
@@ -100,12 +103,10 @@ export class AuthService {
       // phoneNumber: extraData?.phoneNumber,
       emailVerified: user.emailVerified
     };
-    await userRef.set(userState, 
-      {
-        merge: true,
-      });
+
+    await userRef.set(userState, {merge: true,});
      
-      return userState;
+    return userState;
   }
   
   parseName(email: string) {

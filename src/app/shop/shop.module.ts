@@ -23,7 +23,6 @@ import { ProductyEditComponent } from './components/product/category/product-edi
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: '', redirectTo: 'categories/:id', pathMatch: 'full'},
-      // { path: 'categories/0', component: ProductListPageComponent},
       { path: 'categories/:id', component: ProductListPageComponent},
       { path: 'products/:productId', component: ProductViewPageComponent},
       { path: 'category/new', component: CategoryEditComponent},
@@ -34,13 +33,11 @@ import { ProductyEditComponent } from './components/product/category/product-edi
     EffectsModule.forFeature([ProductEffects]),
   ],
   declarations: [
-    // ProductSelectedPageComponent,
     ProductViewPageComponent,
     ProductListPageComponent,
     ProductListComponent,
     ProductViewComponent,
     ProductDetailComponent,
-    // ProductSearchComponent,
     CategoryEditComponent,
     ProductyEditComponent
   ],
