@@ -1,3 +1,4 @@
+import { User } from 'src/app/auth/models/user';
 import { OrderItem } from './OrderItem.model';
 
 export interface Order {
@@ -9,6 +10,7 @@ export interface Order {
    status: OrderStatus
    items: Array<OrderItem>;
    userId: string;
+   orderUser?: User;
    paid?: boolean;
    amount: number;
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,7 +21,6 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/services/auth-guard.service';
 import { DbService } from './core/services/db.service';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { DbService } from './core/services/db.service';
     AngularFireModule.initializeApp(environment.firebaseWithDatabase,'db' ),
     AngularFireAuthModule,
     AngularFirestoreModule,
-
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([ConfigEffects]),
     StoreRouterConnectingModule.forRoot({

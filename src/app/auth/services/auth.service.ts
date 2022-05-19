@@ -5,7 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 import { User } from '../models/user';
 import * as firestore from 'firebase/firestore';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { QuerySnapshot } from 'firebase/firestore';
 
 @Injectable()
@@ -35,8 +35,15 @@ export class AuthService {
     return this.db.collection('users', ref => ref.where('uid', '==', userId )).get();
   }
 
-  fetchUsers(email: string){
+  getAllUsers(): Observable<User[]>{
+    return this.db.collection('users').get().pipe( map( q => {
+      const result = q.docs.map( doc => <User>doc.data() );
+      return result;
+    }
+    ));
+  }
 
+  fetchUsers(email: string){
     return this.db.collection('users', 
             ref => ref.where('email', '>=', email ).where('email', '<=', email + '\uf8ff')).get();
   }

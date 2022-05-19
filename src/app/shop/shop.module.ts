@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { ProductService } from './services/product.service';
 import { MaterialModule } from '../material';
 import { ProductListComponent } from './components/product-list.component';
 import { ProductDetailComponent } from './components/product-detail.component';
@@ -15,6 +14,7 @@ import { ProductEffects } from './effects/product.effects';
 import { reducers } from './reducers';
 import { CategoryEditComponent } from './components/category/category-edit.component';
 import { ProductyEditComponent } from './components/product/category/product-edit.component';
+import { ProductService } from './services/product.service';
 
 @NgModule({
   imports: [

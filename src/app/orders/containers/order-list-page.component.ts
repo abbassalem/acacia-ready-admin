@@ -1,24 +1,24 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { OrderSearchCriteria, Order } from '../../shop/models/order.model';
 import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
 import * as fromOrderReducer from '../reducers/orders.reducer';
 import { Load, Reset } from '../actions/orders.actions';
-import { filter, map } from 'rxjs/operators';
 import * as fromAuthActions from '../../auth/actions/auth.actions'
 import { User } from 'src/app/auth/models/user';
+
 
 @Component({
   selector: 'app-order-list-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <app-order-search [fetchedUsers$]="fetchedUsers$" (searchCriteriaChange)= "executeQuery($event)" 
-    (usersForAutoChange)="fetchUsersForAuto($event)" >
+        (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
-    <br>
-    <app-order-list (searching)="executeQuery($event)" [orders]="orders$ | async">
-  </app-order-list>
+  
+    <app-order-list (searching)="executeQuery($event)" [orderList]="orders$ | async">
+  </app-order-list>‰
   `,
   styles: [
     ` .mat-tab-label-active {
@@ -41,6 +41,7 @@ export class OrderListPageComponent implements OnInit {
 
   
   ngOnInit(): void {  
+
   }
   
   fetchUsersForAuto(email: string) {
@@ -52,13 +53,7 @@ export class OrderListPageComponent implements OnInit {
     let payload = {orderSearchCriteria: orderSearchCriteria};
     this.orderStore.dispatch(new Reset);
     this.orderStore.dispatch(new Load(payload));
-    this.orders$ =  this.orderStore.pipe(
-      select(fromOrderReducer.getOrders),
-      filter(value => value.length > 0),
-      map( orders => {
-          return orders;
-      })
-    );
-
+    this.orders$ = this.orderStore.select(fromOrderReducer.getOrders);
+    
   }
 }

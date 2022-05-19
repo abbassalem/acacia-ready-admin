@@ -22,7 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   imports: [
@@ -49,7 +49,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSnackBarModule ,
     MatGridListModule,
     MatMenuModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AgGridModule.forRoot()
+
   ],
   exports: [
     MatExpansionModule,
@@ -74,7 +76,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSnackBarModule ,
     MatGridListModule,
     MatMenuModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AgGridModule
   ],
 })
 export class MaterialModule {}

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Order, OrderSearchCriteria} from '../../shop/models/order.model';
-import { AngularFirestore, DocumentData , QuerySnapshot } 
+import { AngularFirestore, AngularFirestoreCollection, DocumentData , QuerySnapshot } 
         from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 @Injectable()
 export class OrderService {
@@ -20,37 +20,33 @@ export class OrderService {
 
 
    // TODO: use duration to filter 
-  getOrders(orderSearchCriteria: OrderSearchCriteria): Observable<QuerySnapshot<DocumentData>> {
+getOrders(orderSearchCriteria: OrderSearchCriteria): Observable<Order[]>{
     console.log('service => order search criteria');
     console.dir(orderSearchCriteria);
-
+    let afsCollection: AngularFirestoreCollection;
     if(orderSearchCriteria.userId){
        if(orderSearchCriteria.status == 'ALL'){
-          return this.db.collection('orders', 
-            ref => ref.where('userId', '==', orderSearchCriteria.userId)).get();
+          afsCollection =  this.db.collection('orders', 
+            ref => ref.where('userId', '==', orderSearchCriteria.userId));
        } else {
-          return this.db.collection('orders', 
+        afsCollection =  this.db.collection('orders', 
             ref => ref.where('userId', '==', orderSearchCriteria.userId)
-                      .where('status', '==', orderSearchCriteria.status)).get();
+                      .where('status', '==', orderSearchCriteria.status));
        } 
     } else {
         if(orderSearchCriteria.status == 'ALL'){
-          return this.db.collection('orders').get();
+          afsCollection =  this.db.collection('orders');
         } else {
-          return this.db.collection('orders', 
-            ref => ref.where('status', '==', orderSearchCriteria.status)).get();
+          afsCollection =  this.db.collection('orders', 
+            ref => ref.where('status', '==', orderSearchCriteria.status));
         } 
     }
-      //  } else {
-      //   return this.db.collection('orders', 
-      //       ref => ref.where('userId', '==', orderSearchCriteria.userId)
-      //               // .where('orderDate', '>=', inputDurationWithStatus.start)
-      //               // .where('orderDate', '<=', inputDurationWithStatus.end)
-      //               .where('status', '==', orderSearchCriteria.status)
-      //               // .orderBy( "orderDate", "desc" )
-      //               )
-      //       .get();
-      //  }
+    return afsCollection.get().pipe( 
+      map( q => {
+        let orders: Order[];
+        orders = q.docs.map( doc =>  <Order>doc.data());
+        return orders;
+      }));
   }
 
   filterDate(order: Order, start: Date, end: Date) {
@@ -69,3 +65,16 @@ export class OrderService {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 }
+
+
+
+      //  } else {
+      //   return this.db.collection('orders', 
+      //       ref => ref.where('userId', '==', orderSearchCriteria.userId)
+      //               // .where('orderDate', '>=', inputDurationWithStatus.start)
+      //               // .where('orderDate', '<=', inputDurationWithStatus.end)
+      //               .where('status', '==', orderSearchCriteria.status)
+      //               // .orderBy( "orderDate", "desc" )
+      //               )
+      //       .get();
+      //  }
