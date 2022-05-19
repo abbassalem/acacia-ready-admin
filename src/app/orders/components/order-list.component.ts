@@ -1,10 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Order } from '../../shop/models/order.model';
-import { AgGridEvent, GridReadyEvent, ColDef } from 'ag-grid-community';
+import { AgGridEvent, GridReadyEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular'
 import { ButtonRenderer, CheckboxRenderer } from 'src/app/shared/renderers/eggrid.renderers';
 import 'ag-grid-enterprise';
-import { ButtonRendererComponent } from 'src/app/shared/renderers/button-renderer.component';
 import { Store } from '@ngrx/store';
 import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
 
@@ -18,17 +17,26 @@ import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
           [masterDetail]="true"
           [detailCellRendererParams]="detailCellRendererParams"
           [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
           [rowData]="orderList"
           [rowSelection]="'single'"
           [immutableData]="true"
           [getRowNodeId]="getRowNodeId"
           [animateRows]="true"
+          [sideBar] = "true"
+          [pivotColumnGroupTotals]=""
           (gridReady)="onGridReady($event)"
           >
       </ag-grid-angular>
 `,
   styles: [
     `
+    .header-order-date{
+      color: blue;
+      font-weight: bold;
+      background-color: white;
+    }
+
     ag-grid-angular {
       width: 100%;
       height: 30%
@@ -42,6 +50,7 @@ import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
       flex: 1 0.5 auto;
       float:left
     }
+    
   `,
   ]
 })
@@ -55,23 +64,37 @@ export class OrderListComponent {
   gridColumnApi;
   gridOptions;
 
-  public columnDefs: ColDef[] = [
-    { headerName: 'Order Date', field: 'orderDate',cellRenderer: 'agGroupCellRenderer', resizable: true,
+  defaultColDef:ColDef = {
+    enableValue: true,
+    enableRowGroup: true,
+    enablePivot: true,
+    sortable: true,
+    filter: true
+  };
+
+  columnDefs = [
+
+    { headerName: 'Order Date',headerClass:'hear-order-date',  hide: 'false', field: 'orderDate',cellRenderer: 'agGroupCellRenderer',  resizable: false, 
     filter:true,sortable: true, valueFormatter: params => this.dateFormatter(params.data.orderDate)},
-    { headerName: 'Status',field: 'status', sortable: true},
-    { headerName: 'Amount',field: 'amount',filter:true, sortable: true, valueFormatter: params =>  params.data.amount.toFixed(2)},
-    { headerName: 'Delivery Date',field: 'deliveryDate', filter:true, sortable: true, valueFormatter: params => this.dateFormatter(params.data.deliveryDate) },
-    { headerName: 'Delivery Time',field: 'deliveryTime', sortable:true},
-    { headerName: 'Order Payment',field: 'paid', cellRenderer: CheckboxRenderer, editable: false },
-    { headerName: 'User Email',field: 'orderUser.email' },
-    { headerName: 'User Id',field: 'orderUser.displayName', cellRenderer: ButtonRendererComponent,
-      cellRendererParams: {
-        onClick: this.onSelect.bind(this),
-        label: 'Show User'
-    }},
-    { headerName: 'Name ',field: 'orderUser.displayName', hide: true },
-    { headerName: 'Phone ',field: 'orderUser.phoneNumber', hide: true }
+
+    { headerName: 'Order Details',  children: [
+        { headerName: 'Status',field: 'status', sortable: true},
+        { headerName: 'Amount',field: 'amount',filter:true, sortable: true, valueFormatter: params =>  params.data.amount.toFixed(2)},
+        { headerName: 'Order Payment',field: 'paid', cellRenderer: CheckboxRenderer, editable: false }
+        
+    ]},
   
+
+    {headerName: 'Delivery Info',   children: [
+        { headerName: 'Delivery Date',field: 'deliveryDate', filter:true, sortable: true, 
+        valueFormatter: params => this.dateFormatter(params.data.deliveryDate) },
+        { headerName: 'Delivery Time',field: 'deliveryTime', sortable:true}
+    ]},
+    { headerName: 'User Info',   children: [
+                            {field: 'orderUser.displayName', headerName: 'Name'},
+                            {field: 'orderUser.email', headerName: 'Email'},
+                            {field: 'orderUser.phoneNumber', headerName: 'Phone'}
+    ]}
   ];
 
   constructor(private authStore: Store<fromAuthReducer.State>) {}
@@ -84,7 +107,7 @@ export class OrderListComponent {
     this.columnDefs['orderUser.displayName'].hide = false;
 
   }
-
+    
   detailCellRendererParams = {
     detailGridOptions: {
         columnDefs: [
