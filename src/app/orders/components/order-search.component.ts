@@ -69,7 +69,7 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
     }
 
     .mat-form-field {
-      min-width: 300px;
+      min-width: 200px;
     }
 
     .mat-spinner {
@@ -141,7 +141,6 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
    }
 
   executeSearch() {
-   
     let orderSearchCriteria: OrderSearchCriteria = {
       start: this.searchGroup.get('startDate').value.getTime(),
       end: this.searchGroup.get('endDate').value.getTime(),

@@ -8,7 +8,6 @@ import { Load, Reset } from '../actions/orders.actions';
 import * as fromAuthActions from '../../auth/actions/auth.actions'
 import { User } from 'src/app/auth/models/user';
 
-
 @Component({
   selector: 'app-order-list-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +16,7 @@ import { User } from 'src/app/auth/models/user';
         (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
   
-    <app-order-list (searching)="executeQuery($event)" [orderList]="orders$ | async">
+    <app-order-list [orderList]="orders$ | async">
   </app-order-list>‰
   `,
   styles: [

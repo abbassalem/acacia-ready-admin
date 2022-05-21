@@ -51,7 +51,6 @@ import { AgGridModule } from 'ag-grid-angular';
     MatMenuModule,
     MatAutocompleteModule,
     AgGridModule.forRoot()
-
   ],
   exports: [
     MatExpansionModule,
