@@ -75,4 +75,55 @@ export class OrdersEffects {
     )
   });
 
+  paidOrder$ = createEffect( () => {
+    return this.actions$.pipe(
+          ofType<fromOrderActions.PaidChange>(fromOrderActions.OrderActionTypes.PaidChange),
+          switchMap( action => 
+            this.orderService.changePaidOrder(action.payload.field, action.payload.value, action.payload.ids)
+          ),
+          map(ids =>  new fromOrderActions.PaidChangeComplete(ids)),
+          catchError (error => of(error))
+          )
+  }, {dispatch: true});
+
+  paidOrderSuccess$ =  createEffect( () => {
+    return this.actions$.pipe(
+        ofType<fromOrderActions.PaidChangeComplete>(fromOrderActions.OrderActionTypes.PaidChangeComplete),
+        switchMap( (action) => {
+            this.snackBar.open('Orders paid successfully.', 'Close',{
+            duration: 4000,
+            panelClass: ["snack-notification"],
+            horizontalPosition: "center",
+            verticalPosition: "top"
+            });
+            return of(action.payload);
+        })          
+      )
+    }, { dispatch: false });
+  
+    statusOrder$ = createEffect( () => {
+      return this.actions$.pipe(
+            ofType<fromOrderActions.StatusChange>(fromOrderActions.OrderActionTypes.StatusChange),
+            switchMap( action => 
+              this.orderService.changeStatusOrder(action.payload.field, action.payload.value, action.payload.ids)
+            ),
+            map( value =>  new fromOrderActions.StatusChangeComplete(value)),
+            catchError (error => of(error))
+            )
+    }, {dispatch: true});
+  
+    statusOrderSuccess$ =  createEffect( () => {
+      return this.actions$.pipe(
+          ofType<fromOrderActions.StatusChangeComplete>(fromOrderActions.OrderActionTypes.StatusChangeComplete),
+          switchMap( action => {
+              this.snackBar.open('Orders status changed to ['+ action.payload.status +'] successfully.', 'Close',{
+              duration: 4000,
+              panelClass: ["snack-notification"],
+              horizontalPosition: "center",
+              verticalPosition: "top"
+              });
+              return of(action.payload);
+          })          
+        )
+      }, { dispatch: false });
 }

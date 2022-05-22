@@ -51,6 +51,22 @@ export function reducer(state = initialState, action: OrderActionsUnion): OrderS
       return state;
     }
 
+    case OrderActionTypes.PaidChange: {
+      return state;
+    }
+
+    case OrderActionTypes.PaidChangeComplete: {
+      return state;
+    }
+
+
+    case OrderActionTypes.StatusChangeComplete: {
+      return state;
+    }
+
+    case OrderActionTypes.StatusChange: {
+      return state;
+    }
     
     case OrderActionTypes.LoadComplete: {
       return adapter.addMany(action.payload, state);

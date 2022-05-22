@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Order, OrderSearchCriteria} from '../../shop/models/order.model';
 import { AngularFirestore, AngularFirestoreCollection, DocumentData , QuerySnapshot } 
         from '@angular/fire/compat/firestore';
-import { map, Observable, of } from 'rxjs';
+import { map, merge, Observable, of } from 'rxjs';
 
 @Injectable()
 export class OrderService {
@@ -18,6 +18,20 @@ export class OrderService {
       return saved;  
     }
 
+
+    changePaidOrder(field: string, value: any, ids: string[]): Observable<string[]> {
+       ids.forEach ( id => {
+        this.db.collection('orders').doc(id).update({[field]: value}); 
+      });
+      return of(ids);
+    }
+
+    changeStatusOrder(field: string, value: any, ids: string[]):  Observable<{status: string, ids:string[]}>{
+      ids.forEach ( id => {
+        this.db.collection('orders').doc(id).update({[field]: value}); 
+      });
+      return of({'status': value, 'ids': ids});
+    }
 
    // TODO: use duration to filter 
 getOrders(orderSearchCriteria: OrderSearchCriteria): Observable<Order[]>{

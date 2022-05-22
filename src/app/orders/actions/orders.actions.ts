@@ -12,7 +12,13 @@ export enum OrderActionTypes {
   CopyError = '[Order] Copy Error',
   SaveOrder = '[Order] Save Order',
   SaveOrderComplete = '[Order] Save Order Complete',
-  SaveOrderError = '[Order] Save Order Error'
+  SaveOrderError = '[Order] Save Order Error',
+  PaidChange = '[Order] Paid Change',
+  PaidChangeComplete = '[Order] Paid Change Complete',
+  PaidChangeEror = '[Order] Paid Change Error',
+  StatusChange = '[Order] Status Change',
+  StatusChangeComplete = '[Order] Status Complete',
+  StatusChangeError = '[Order] Status Change Error',
 }
 
 export class Reset implements Action {
@@ -70,6 +76,38 @@ export class CopyError implements Action {
   constructor(public payload: any) { }
 }
 
+export class PaidChange implements Action {
+  readonly type = OrderActionTypes.PaidChange;
+  constructor(public payload: {field: string, value: any, ids: string[]}) { }
+}
+
+export class PaidChangeComplete implements Action {
+  readonly type = OrderActionTypes.PaidChangeComplete;
+  constructor(public payload: string[]) { }
+}
+
+export class PaidChangeError implements Action {
+  readonly type = OrderActionTypes.PaidChangeEror;
+  constructor(public payload: any) { }
+}
+
+export class StatusChange implements Action {
+  readonly type = OrderActionTypes.StatusChange;
+  constructor(public payload: {field: string, value: any, ids: string[]}) { }
+}
+
+export class StatusChangeComplete implements Action {
+  readonly type = OrderActionTypes.StatusChangeComplete;
+  constructor(public payload: {'status': string, 'ids':string[]}) { }
+}
+
+export class StatusChangeError implements Action {
+  readonly type = OrderActionTypes.StatusChangeError;
+  constructor(public payload: any) { }
+}
+
+
+
 export type OrderActionsUnion =
   | Reset
   | Load
@@ -81,4 +119,10 @@ export type OrderActionsUnion =
   | CopyError
   | SaveOrder
   | SaveOrderComplete
-  | SaveOrderError;
+  | SaveOrderError
+  | PaidChange
+  | PaidChangeComplete
+  | PaidChangeError
+  | StatusChange
+  | StatusChangeComplete 
+  | StatusChangeError;

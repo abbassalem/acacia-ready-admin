@@ -16,6 +16,7 @@ export interface Order {
 }
 
 export enum OrderStatus {
+    ALL = 'ALL',
     OPEN = 'OPEN',
     DELIVERED = 'DELIVERED',
     CANCELLED = 'CANCELLED',

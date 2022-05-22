@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { OrderSearchCriteria, Order } from '../../shop/models/order.model';
+import { OrderSearchCriteria, Order, OrderStatus } from '../../shop/models/order.model';
 import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
 import * as fromOrderReducer from '../reducers/orders.reducer';
-import { Load, Reset } from '../actions/orders.actions';
+import { Load, PaidChange, Reset, StatusChange } from '../actions/orders.actions';
 import * as fromAuthActions from '../../auth/actions/auth.actions'
 import { User } from 'src/app/auth/models/user';
 
@@ -16,9 +16,12 @@ import { User } from 'src/app/auth/models/user';
         (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
   
-    <app-order-list [orderList]="orders$ | async">
-  </app-order-list>‰
-  `,
+  <app-order-list [orderList]="orders$ | async" 
+      (payChange) = "executePay($event)"
+      (deliverChange) = "executeDeliver($event)"
+      (cancelChange) = "executeCancel($event)">
+  </app-order-list> `,
+
   styles: [
     ` .mat-tab-label-active {
       background-color: #5EADB0;
@@ -33,6 +36,7 @@ export class OrderListPageComponent implements OnInit {
   orders$: Observable<Order[]>;
   selectedOrderId$: Observable<string>;
   fetchedUsers$: Observable<Array<User>>;
+  currentSearchCriteria: OrderSearchCriteria;
 
   constructor(private authStore: Store<fromAuthReducer.State>, 
               private orderStore: Store<fromOrderReducer.OrderState>) {
@@ -49,10 +53,32 @@ export class OrderListPageComponent implements OnInit {
   }
 
   executeQuery(orderSearchCriteria: OrderSearchCriteria) {
+    this.currentSearchCriteria = orderSearchCriteria;
     let payload = {orderSearchCriteria: orderSearchCriteria};
     this.orderStore.dispatch(new Reset);
     this.orderStore.dispatch(new Load(payload));
     this.orders$ = this.orderStore.select(fromOrderReducer.getOrders);
     
   }
+
+  executePay(event){
+    let payload = {field: 'paid', value:true, ids: event};
+    this.orderStore.dispatch(new PaidChange(payload));
+    this.executeQuery(this.currentSearchCriteria);
+  }
+
+  executeDeliver(event){
+    let payload = {field: 'status', value:'DELIVERED', ids: event};
+    this.orderStore.dispatch(new StatusChange(payload));
+    // this.currentSearchCriteria.status = 'ALL';
+    this.executeQuery(this.currentSearchCriteria);
+  }
+
+  executeCancel(event) {
+    let payload = {field: 'status', value:'CANCELLED', ids: event};
+    this.orderStore.dispatch(new StatusChange(payload));
+    // this.currentSearchCriteria.status = 'ALL';
+    this.executeQuery(this.currentSearchCriteria);
+  }
+
 }
