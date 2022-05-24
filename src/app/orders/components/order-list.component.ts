@@ -1,18 +1,20 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Order } from '../../shop/models/order.model';
-import { AgGridEvent, GridReadyEvent, ColDef, SideBarDef, GridApi, GridParams, SetLeftFeature } from 'ag-grid-community';
+import { AgGridEvent, GridReadyEvent } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular'
 import { ButtonRenderer, CheckboxRenderer } from 'src/app/shared/renderers/eggrid.renderers';
 import 'ag-grid-enterprise';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-order-list',
   template: `
-
 <mat-toolbar-row *ngIf="orderList && orderList.length > 0">
-      <button mat-raised-button (click)="deliver()" > Delivered</button>
-      <button mat-raised-button (click)="cancel()" > Cancel</button>
-      <button mat-raised-button (click)="pay()"> Paid</button>
+      <button  [disabled]="disabledButtons" color="primary" mat-raised-button (click)="deliver()">Delivered</button>
+      &nbsp;&nbsp;
+      <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="cancel()">Cancel</button>
+      &nbsp;&nbsp;
+      <button [disabled]="disabledButtons" color="primary" mat-raised-button (click)="pay()"> Paid</button>
  </mat-toolbar-row>    
 
   <ag-grid-angular #agGrid *ngIf="orderList && orderList.length > 0"
@@ -42,9 +44,7 @@ import 'ag-grid-enterprise';
 `,
   styles: [
     `
-     /* (cellValueChangedEvent)= "executeCellValueChangedEvent($event)"> */
-     /* [groupDisplayType]= "groupRows" */
-    .header-order-date{
+    .grid-header-level1 {
       color: blue;
       font-weight: bold;
       background-color: white;
@@ -70,7 +70,8 @@ import 'ag-grid-enterprise';
 export class OrderListComponent {
 
   @Input() orderList: Order[];
-  
+  @Input() disabledButtons:boolean;
+  @Output() toggleDisabledChanged:EventEmitter<boolean> = new EventEmitter(true);         
   @Output() payChange: EventEmitter<string[]> = new EventEmitter();
   @Output() deliverChange: EventEmitter<string[]> = new EventEmitter();
   @Output() cancelChange: EventEmitter<string[]> = new EventEmitter();
@@ -83,13 +84,17 @@ export class OrderListComponent {
   gridOptions;
 
   columnDefs =  [
-      { headerName: 'Order Date',class:'header-order-date', hide: 'false', field: 'orderDate',
+      { header: 'Selection', checkboxSelection: true, headerCheckboxSelection: true, 
+      pinned: 'left',lockPinned:true,lockVisible: true,
+       width: 50, field: 'checkboxBtn'},
+      { headerName: 'Order Date',cellStyle: {'color': 'white', 'background-color': 'darkgrey'}, 
+         field: 'orderDate', pinned: 'left',lockPinned:true,lockVisible: true,
           cellRenderer: 'agGroupCellRenderer', valueFormatter: params => this.dateFormatter(params.data.orderDate)},
       { headerName: 'Order Details', 
         children: [
           {headerName: 'Status',field: 'status'},
           {headerName: 'Amount',field: 'amount',sortable: true, valueFormatter: params =>  params.data.amount.toFixed(2)},
-          { headerName: 'Order Payment',field: 'paid', cellRenderer: CheckboxRenderer, editable: false }
+          { headerName: 'Order Payment',field: 'paid', cellRenderer: CheckboxRenderer }
       ]},
       {headerName: 'Delivery Info',   
           children: [
@@ -97,37 +102,32 @@ export class OrderListComponent {
             valueFormatter: params => this.dateFormatter(params.data.deliveryDate)},
             { headerName: 'Delivery Time',field: 'deliveryTime'}
       ]},
-      { headerName: 'User Info',   
+      { headerName: 'User Info',  
             children: [
                   {field: 'orderUser.displayName', headerName: 'Name'},
                   {field: 'orderUser.email', headerName: 'Email'},
                   {field: 'orderUser.phoneNumber', headerName: 'Phone'}
       ]},
-      { header: 'Selection', checkboxSelection: true, headerCheckboxSelection: true, pinned: 'left', width: 50, field: 'checkboxBtn'},
-      // {
-      //   headerName: "action",
-      //   minWidth: 150,
-      //   cellRenderer: this.actionCellRenderer,
-      //   editable: false,
-      //   colId: "action"
-      // }
     ];
   
   defaultColDef = {
-    enableValue: true,
-    enableRowGroup: true,
-    enablePivot: true,
+    // enableValue: true,
+    // enableRowGroup: true,
+    // enablePivot: true,
     sortable: true,
     filter: true,
     editable: false
   }
 
-  selection: any[] = [];
-
   constructor() {}
 
   checkIfEmpty(params){
-    this.selection = params.gridApi.getSelectedNodes();
+    this.rowsSelected = this.gridApi.getSelectedRows();
+    if(this.rowsSelected && this.rowsSelected.length > 0) {
+      this.toggleDisabledChanged.emit(false);
+    } else {
+      this.toggleDisabledChanged.emit(true);
+    }
   }
 
   detailCellRendererParams = {

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Order, OrderSearchCriteria} from '../../shop/models/order.model';
-import { AngularFirestore, AngularFirestoreCollection, DocumentData , QuerySnapshot } 
-        from '@angular/fire/compat/firestore';
-import { map, merge, Observable, of } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { map,Observable, of } from 'rxjs';
 
 @Injectable()
 export class OrderService {
@@ -17,7 +16,6 @@ export class OrderService {
       this.db.collection('orders').doc(docRef.id).set({id: docRef.id}, {merge:true});
       return saved;  
     }
-
 
     changePaidOrder(field: string, value: any, ids: string[]): Observable<string[]> {
        ids.forEach ( id => {

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { OrderSearchCriteria, Order, OrderStatus } from '../../shop/models/order.model';
+import { OrderSearchCriteria, Order } from '../../shop/models/order.model';
 import * as fromAuthReducer from '../../../app/auth/reducers/auth.reducer';
 import * as fromOrderReducer from '../reducers/orders.reducer';
 import { Load, PaidChange, Reset, StatusChange } from '../actions/orders.actions';
@@ -10,16 +10,18 @@ import { User } from 'src/app/auth/models/user';
 
 @Component({
   selector: 'app-order-list-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <app-order-search [fetchedUsers$]="fetchedUsers$" (searchCriteriaChange)= "executeQuery($event)" 
         (usersForAutoChange)="fetchUsersForAuto($event)" >
   </app-order-search>
   
-  <app-order-list [orderList]="orders$ | async" 
+  <app-order-list [orderList]="orders$ | async"  
+      [disabledButtons]="pageDisabledButtons"   
+      (toggleDisabledChanged) = "disableButtons($event)"
       (payChange) = "executePay($event)"
       (deliverChange) = "executeDeliver($event)"
-      (cancelChange) = "executeCancel($event)">
+      (cancelChange) = "executeCancel($event)"
+       >
   </app-order-list> `,
 
   styles: [
@@ -31,22 +33,22 @@ import { User } from 'src/app/auth/models/user';
   }`]
 })
 
-export class OrderListPageComponent implements OnInit {
+export class OrderListPageComponent {
 
   orders$: Observable<Order[]>;
   selectedOrderId$: Observable<string>;
   fetchedUsers$: Observable<Array<User>>;
   currentSearchCriteria: OrderSearchCriteria;
+  pageDisabledButtons: boolean = true;
 
   constructor(private authStore: Store<fromAuthReducer.State>, 
               private orderStore: Store<fromOrderReducer.OrderState>) {
   }
-
   
-  ngOnInit(): void {  
-
+  disableButtons (disabled: boolean){
+    this.pageDisabledButtons = disabled;
   }
-  
+
   fetchUsersForAuto(email: string) {
       this.authStore.dispatch(new fromAuthActions.FetchedUsers(email));
       this.fetchedUsers$ = this.authStore.select(fromAuthReducer.getFetchedUsers);
@@ -58,7 +60,7 @@ export class OrderListPageComponent implements OnInit {
     this.orderStore.dispatch(new Reset);
     this.orderStore.dispatch(new Load(payload));
     this.orders$ = this.orderStore.select(fromOrderReducer.getOrders);
-    
+    this.pageDisabledButtons = true;
   }
 
   executePay(event){
