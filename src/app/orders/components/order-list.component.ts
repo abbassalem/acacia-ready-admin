@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input,  Output, ViewChild } from '@angular/core';
 import { Order } from '../../shop/models/order.model';
 import { GridReadyEvent } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular'
@@ -110,9 +110,12 @@ export class OrderListComponent {
     ];
   
   defaultColDef = {
+<<<<<<< HEAD
     // enableValue: true,
     // enableRowGroup: true,
     // enablePivot: true,
+=======
+>>>>>>> prepare for rebase
     sortable: true,
     filter: true,
     editable: false
