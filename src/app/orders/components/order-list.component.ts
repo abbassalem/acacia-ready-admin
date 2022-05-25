@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Order } from '../../shop/models/order.model';
-import { AgGridEvent, GridReadyEvent } from 'ag-grid-community';
+import { GridReadyEvent } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular'
-import { ButtonRenderer, CheckboxRenderer } from 'src/app/shared/renderers/eggrid.renderers';
+import { CheckboxRenderer } from 'src/app/shared/renderers/eggrid.renderers';
 import 'ag-grid-enterprise';
-import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-order-list',

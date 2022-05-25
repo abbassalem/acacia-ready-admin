@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { OrderSearchCriteria, Order } from '../../shop/models/order.model';
@@ -10,6 +10,7 @@ import { User } from 'src/app/auth/models/user';
 
 @Component({
   selector: 'app-order-list-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
   <app-order-search [fetchedUsers$]="fetchedUsers$" (searchCriteriaChange)= "executeQuery($event)" 
         (usersForAutoChange)="fetchUsersForAuto($event)" >
