@@ -110,12 +110,6 @@ export class OrderListComponent {
     ];
   
   defaultColDef = {
-<<<<<<< HEAD
-    // enableValue: true,
-    // enableRowGroup: true,
-    // enablePivot: true,
-=======
->>>>>>> prepare for rebase
     sortable: true,
     filter: true,
     editable: false

@@ -69,7 +69,7 @@ import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
 
     mat-form-field {
       min-width: 300px;
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .mat-spinner {
