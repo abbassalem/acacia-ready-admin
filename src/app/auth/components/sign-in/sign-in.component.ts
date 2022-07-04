@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Authenticate } from '../../models/user';
 
 @Component({
@@ -12,9 +12,9 @@ export  class SignInComponent {
 
   @Output() emailSubmission = new EventEmitter<Authenticate>();
 
-  form: FormGroup = new FormGroup({
-    email: new FormControl('', Validators.email),
-    password: new FormControl('', Validators.required),
+  form: UntypedFormGroup = new UntypedFormGroup({
+    email: new UntypedFormControl('', Validators.email),
+    password: new UntypedFormControl('', Validators.required),
   });
 
   constructor() {}

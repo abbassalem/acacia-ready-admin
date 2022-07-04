@@ -1,0 +1,17 @@
+
+<mat-card>
+ 
+  <mat-card-subtitle style="font-size: 12px">
+    <h6><b>Key: </b>{{fileUpload.key}}  - <b>Path: </b>{{fileUpload.path}}</h6>
+  </mat-card-subtitle>
+  
+  <mat-action-row>
+    <a href="{{fileUpload.downloadURL}}" style="font-size:12px" target="_blank"> {{fileUpload.path}}</a>
+    
+    <button (click)="deleteFileUpload(fileUpload)" mat-card-subtitle color="primary" style="float: right;">
+      Delete
+    </button>
+  </mat-action-row>
+
+</mat-card>
+

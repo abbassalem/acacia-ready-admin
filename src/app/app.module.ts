@@ -19,9 +19,9 @@ import { CustomRouterStateSerializer } from './shared/utils';
 import { AngularFireModule, FIREBASE_APP_NAME } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
 import { DbService } from './core/services/db.service';
+import { AppRoutingModule } from 'app-routing.module';
 
 @NgModule({
   imports: [
@@ -57,6 +57,9 @@ import { DbService } from './core/services/db.service';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
+  declarations: [
+  
+  ]
 })
 export class AppModule {}
 

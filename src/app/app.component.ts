@@ -24,6 +24,11 @@ import { User } from './auth/models/user';
           New Category
       </button>
 
+      <button mat-menu-item routerLink="/gallery">
+          <mat-icon>list</mat-icon>
+          Gallery
+      </button>
+
       <button mat-menu-item  routerLink="/orders" >
           <mat-icon>perm_media</mat-icon>
           Orders

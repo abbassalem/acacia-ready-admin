@@ -19,6 +19,11 @@ export const routes: Routes = [
     component: HomePageComponent
   },
   {
+    path: 'gallery',
+    loadChildren: () => import('./gallery/gallery.module').then ( module => module.GalleryModuleModule),
+    // canActivate: [AuthGuard]
+  },
+  {
     path: 'shop',
     loadChildren: () => import('./shop/shop.module').then ( module => module.ShopModule),
     canActivate: [AuthGuard]

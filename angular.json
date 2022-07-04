@@ -102,5 +102,7 @@
       }
     }
   },
-  "defaultProject": "acacia-ready-admin"
+  "cli": {
+    "analytics": false
+  }
 }

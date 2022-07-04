@@ -1,5 +1,5 @@
 import { Component, Output, Input, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Observable, of, Subscription, switchMap } from 'rxjs';
 import { User } from 'src/app/auth/models/user';
 import { OrderSearchCriteria } from 'src/app/shop/models/order.model';
@@ -95,7 +95,7 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
   @Output() usersForAutoChange = new EventEmitter<string>();
 
   selectedUser: User;
-  searchGroup: FormGroup;
+  searchGroup: UntypedFormGroup;
   statusList: Status[] = [];
   userSubscription: Subscription;
 
@@ -104,12 +104,12 @@ export class OrderSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initilizeStatusList();
-    this.searchGroup = new FormGroup(
+    this.searchGroup = new UntypedFormGroup(
       {
-        startDate: new FormControl(new Date(0), [Validators.required]),
-        endDate: new FormControl(new Date(), [Validators.required]),
-        orderStatus: new FormControl('ALL'),
-        orderUser: new FormControl()
+        startDate: new UntypedFormControl(new Date(0), [Validators.required]),
+        endDate: new UntypedFormControl(new Date(), [Validators.required]),
+        orderStatus: new UntypedFormControl('ALL'),
+        orderUser: new UntypedFormControl()
       }
     );
 

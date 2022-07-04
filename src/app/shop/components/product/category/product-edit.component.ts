@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DbService } from 'src/app/core/services/db.service';
 import { Product } from 'src/app/shop/models/product.model';
@@ -13,7 +13,7 @@ import { CreateProduct } from './../../../actions/category.actions'
 
 export class ProductyEditComponent implements OnInit, OnChanges {
 
-  productForm: FormGroup;
+  productForm: UntypedFormGroup;
   nextProductId: number;
   isVisible: boolean = false;
 
@@ -37,12 +37,12 @@ export class ProductyEditComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     console.log('categoryId = ' + this.categoryId);
-    this.productForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
-      price: new FormControl('', [Validators.required]),
-      reference: new FormControl('', []),
-      image: new FormControl('', []),
+    this.productForm = new UntypedFormGroup({
+      name: new UntypedFormControl('', [Validators.required]),
+      description: new UntypedFormControl('', [Validators.required]),
+      price: new UntypedFormControl('', [Validators.required]),
+      reference: new UntypedFormControl('', []),
+      image: new UntypedFormControl('', []),
     });
     this.dbService.getNextProductId(this.categoryId);
     this.dbService.nextProductId$.subscribe(newId => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { DbService } from 'src/app/core/services/db.service';
 import { Category } from '../../models/category.model';
@@ -13,16 +13,16 @@ import { CreateCategory} from './../../actions/category.actions'
   
   export class CategoryEditComponent implements OnInit {
   
-    categoryForm: FormGroup;
+    categoryForm: UntypedFormGroup;
     nextCategoryId: number;
 
     constructor(private store: Store<CategoryState>, private dbService: DbService) {
     }
   
      ngOnInit() {
-      this.categoryForm = new FormGroup({
-        name: new FormControl('', [Validators.required]),
-        description: new FormControl('', [Validators.required]),
+      this.categoryForm = new UntypedFormGroup({
+        name: new UntypedFormControl('', [Validators.required]),
+        description: new UntypedFormControl('', [Validators.required]),
       });
       this.dbService.getNextCategoryId();
       this.dbService.nextCategoryId$.subscribe(newId => this.nextCategoryId= newId) ;
