@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { FileUpload } from '../../file-upload.model';
 import { FileUploadService } from '../../services/file-upload.service';
 
@@ -10,13 +11,14 @@ import { FileUploadService } from '../../services/file-upload.service';
 export class UploadDetailsComponent implements OnInit {
 
   @Input() fileUpload: FileUpload;
-
-  constructor(private uploadService: FileUploadService) { }
+  @Output() done: EventEmitter<boolean> = new EventEmitter();
+  constructor(private uploadService: FileUploadService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   deleteFileUpload(fileUpload: FileUpload): void {
     this.uploadService.deleteFile(fileUpload);
+    this.done.emit(true);
   }
 }

@@ -2,7 +2,6 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { UploadListComponent } from './components/upload-list/upload-list.component';
 import { UploadDetailsComponent } from './components/upload-details/upload-details.component';
 import { FileUploadService } from './services/file-upload.service';
 import { DropzoneDirective } from './dropzone.directive';
@@ -19,16 +18,13 @@ import { MaterialModule } from '../material';
     MaterialModule,
 
     RouterModule.forChild([
-      { path: '', component: UploadListComponent},
-      { path: 'upload', component: UploaderComponent},
+      { path: '', component: UploaderComponent},
       { path: 'details', component: UploadDetailsComponent}
       
     ]),
   ],
   declarations: [  
-    // UploadFormComponent,
     UploadDetailsComponent,
-    UploadListComponent,
     DropzoneDirective,
     UploaderComponent,
     UploadTaskComponent

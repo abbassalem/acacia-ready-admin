@@ -20,7 +20,7 @@ indigo-pink, pink-bluegrey
 html {
   -webkit-font-smoothing: antialiased;
   -ms-overflow-style: none;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .mat-progress-spinner svg {
@@ -48,23 +48,24 @@ html {
   align-items: center;
   justify-content: center;
   flex-direction: column; 
-  min-width: 80vw;
-  font-weight: 200;
+  min-width: 400px;
+  font-weight: 100;
   height: 300px;
   border: 2px dashed #f16624;
   border-radius: 5px;
-  background: white;
+  /* background: white; */
   margin: 10px 0;
-
-  &.hovering {
-      border: 2px solid #f16624;
-      color: #dadada !important;
-  }
-
-  .file-label {
-      font-size: 1.2em;
-  }
 }
+/* style="background-color: bisque; padding: 10px; border: 1px dotted" */
+.hovering {
+    border: 2px solid #f16624;
+    color: #dadada !important;
+}
+
+.file-label {
+    font-size: 1.2em;
+}
+
 
 progress::-webkit-progress-value {
   transition: width 0.1s ease;

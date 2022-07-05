@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { FileUploadService } from '../../services/file-upload.service';
 
 @Component({
   selector: 'upload-task',
@@ -13,13 +15,15 @@ export class UploadTaskComponent implements OnInit {
 
   @Input() file: File;
 
+  @Output() done: EventEmitter<boolean> = new EventEmitter();
+
   task: AngularFireUploadTask;
   percentage: Observable<number>;
   snapshot: Observable<any>;
   downloadURL: string;
   imagePath = 'images';
 
-  constructor(private storage: AngularFireStorage, private db: AngularFirestore) { }
+  constructor(private storage: AngularFireStorage, private db: AngularFirestore, private router: Router, private uploadService: FileUploadService) { }
 
   ngOnInit() {
     this.startUpload();
@@ -33,8 +37,8 @@ export class UploadTaskComponent implements OnInit {
     this.snapshot   = this.task.snapshotChanges().pipe(
       finalize( async() =>  {
         this.downloadURL = await ref.getDownloadURL().toPromise();
-        this.db.collection(this.imagePath).add( { downloadURL: this.downloadURL, path });
-        location.reload();
+        this.db.collection(this.imagePath).add( { downloadURL: this.downloadURL, path });   
+        this.done.emit(true);   
       }),
     );
   }

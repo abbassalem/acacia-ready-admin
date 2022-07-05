@@ -16,43 +16,6 @@ export class FileUploadService {
   constructor(private db: AngularFirestore, private storage: AngularFireStorage) { 
   }
 
-  pushFileToStorage(fileUpload: FileUpload) {
-
-    const filePath = `${this.basePath}/${fileUpload.file.name}`;
-    const storageRef = this.storage.ref(filePath);
-    this.uploadTask = this.storage.upload(filePath, fileUpload.file);
-    
-    this.uploadTask.task.on('STATE_CHANGED', 
-      (snapshot) => {
-        fileUpload.progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
-         
-      },
-      (error) => {
-        console.info('uploadtask ');
-        console.dir(error);
-      }
-    ,
-    async() => {
-        await this.uploadTask.task.snapshot.ref.getDownloadURL().then( url => fileUpload.downloadURL = url);
-        fileUpload.path = this.basePath + '/'+ fileUpload.file.name;
-        this.saveFileData(fileUpload);
-    }
-    ) 
-  }
-
-    // uploadTask.snapshotChanges().pipe(
-    //   finalize(() => {
-    //     storageRef.getDownloadURL().subscribe(downloadURL => {
-
-    //     }); 
-    //   })
-    // ).subscribe();
-    // return uploadTask.percentageChanges();
-  // }
-
-  private saveFileData(fileUpload: FileUpload): void {
-    this.db.collection(this.basePath).add(fileUpload);
-  }
 
   getFiles(): AngularFirestoreCollection<FileUpload> {
     return this.db.collection(this.basePath);
@@ -63,13 +26,11 @@ export class FileUploadService {
     // }
   }
 
-
   deleteFile(fileUpload: FileUpload): void {
     this.deleteFileDatabase(fileUpload.key)
       .then(() => {
         console.log(fileUpload.path);
         this.deleteFileStorage(fileUpload.path);
-        location.reload();
       })
       .catch(error => console.log(error));
   }
@@ -83,6 +44,45 @@ export class FileUploadService {
     console.dir(name);
     const storageRef = this.storage.ref('/'+ name[1]);
     storageRef.child(name[2]).delete();
-
   }
+
+  // pushFileToStorage(fileUpload: FileUpload) {
+
+  //   const filePath = `${this.basePath}/${fileUpload.file.name}`;
+  //   const storageRef = this.storage.ref(filePath);
+  //   this.uploadTask = this.storage.upload(filePath, fileUpload.file);
+    
+  //   this.uploadTask.task.on('STATE_CHANGED', 
+  //     (snapshot) => {
+  //       fileUpload.progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+         
+  //     },
+  //     (error) => {
+  //       console.info('uploadtask ');
+  //       console.dir(error);
+  //     }
+  //   ,
+  //   async() => {
+  //       await this.uploadTask.task.snapshot.ref.getDownloadURL().then( url => fileUpload.downloadURL = url);
+  //       fileUpload.path = this.basePath + '/'+ fileUpload.file.name;
+  //       this.saveFileData(fileUpload);
+  //   }
+  //   ) 
+  // }
+
+    // uploadTask.snapshotChanges().pipe(
+    //   finalize(() => {
+    //     storageRef.getDownloadURL().subscribe(downloadURL => {
+
+    //     }); 
+    //   })
+    // ).subscribe();
+    // return uploadTask.percentageChanges();
+  // }
+
+  // private saveFileData(fileUpload: FileUpload): void {
+  //   this.db.collection(this.basePath).add(fileUpload);
+  // }
+
+ 
 }

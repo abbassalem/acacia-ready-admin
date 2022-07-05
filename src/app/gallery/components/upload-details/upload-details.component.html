@@ -1,17 +1,24 @@
 
-<mat-card>
+<mat-card style="border: 1px groove purple">
  
-  <mat-card-subtitle style="font-size: 12px">
-    <h6><b>Key: </b>{{fileUpload.key}}  - <b>Path: </b>{{fileUpload.path}}</h6>
-  </mat-card-subtitle>
-  
-  <mat-action-row>
-    <a href="{{fileUpload.downloadURL}}" style="font-size:12px" target="_blank"> {{fileUpload.path}}</a>
-    
-    <button (click)="deleteFileUpload(fileUpload)" mat-card-subtitle color="primary" style="float: right;">
-      Delete
-    </button>
-  </mat-action-row>
-
+    <table >
+      <tr>
+        <td  width="40%">
+          {{fileUpload.path}}
+        </td>
+        <td width="5%">&nbsp;</td>
+        <td width="40%">
+          <a href="{{fileUpload.downloadURL}}" style="justify-content: end;font-size:12px; text-align: start;" target="_blank"> {{fileUpload.key}} </a>
+        </td>
+        <td  width="10%">&nbsp;</td>
+      
+        <td width="5%" style="justify-content:end">
+          <button (click)="deleteFileUpload(fileUpload)" mat-icon-button color="accent" style=" text-align: end" >
+            <mat-icon>delete</mat-icon>
+          </button>  
+        </td>   
+      </tr>
+    </table>
+          
 </mat-card>
 
