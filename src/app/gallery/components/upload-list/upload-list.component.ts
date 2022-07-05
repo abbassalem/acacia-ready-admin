@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
  
 @Component({
   selector: 'app-upload-list',
-  templateUrl: 'upload-list.component.html'
+  templateUrl: 'upload-list.component.html',
+  styleUrls: []
 })
 
 export class UploadListComponent implements OnInit {
@@ -23,6 +24,5 @@ export class UploadListComponent implements OnInit {
       return result.docs.map(doc => ({ key: doc.id, path: doc.data().path, downloadURL: doc.data().downloadURL }))
     }
     ));
-
   }
 }
