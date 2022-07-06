@@ -44,7 +44,7 @@ export class UploaderComponent {
 
   reload(){
     this.getFileUploads();
-    if(this.files.length > 1  ) {
+    if(this.files.length > 0  ) {
       this.files = this.files.slice(length -1);
     }
      else {
